@@ -6,6 +6,8 @@ import 'package:intl/date_symbol_data_local.dart';
 
 import 'presentation/widgets/app.dart';
 
+// TESTING
+
 void main() async {
   await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
