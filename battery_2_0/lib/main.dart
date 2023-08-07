@@ -6,7 +6,7 @@ import 'package:intl/date_symbol_data_local.dart';
 
 import 'presentation/widgets/app.dart';
 
-// TESTING NUMBER 4
+// TESTING NUMBER 5
 
 void main() async {
   await GetStorage.init();
