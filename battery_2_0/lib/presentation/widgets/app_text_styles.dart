@@ -10,6 +10,12 @@ TextStyle firm14 = TextStyle(color: firmColor, fontSize: 14);
 TextStyle firm12 = TextStyle(color: firmColor, fontSize: 12);
 TextStyle firm10 = TextStyle(color: firmColor, fontSize: 10);
 
+TextStyle white18 = const TextStyle(color: Colors.white, fontSize: 18);
+TextStyle white16 = const TextStyle(color: Colors.white, fontSize: 14);
+TextStyle white14 = const TextStyle(color: Colors.white, fontSize: 14);
+TextStyle white12 = const TextStyle(color: Colors.white, fontSize: 12);
+TextStyle white10 = const TextStyle(color: Colors.white, fontSize: 10);
+
 TextStyle grey18 = const TextStyle(color: Colors.grey, fontSize: 18);
 TextStyle grey16 = const TextStyle(color: Colors.grey, fontSize: 14);
 TextStyle grey14 = const TextStyle(color: Colors.grey, fontSize: 14);

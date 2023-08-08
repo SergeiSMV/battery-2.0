@@ -1,9 +1,4 @@
-
-
-
-
-
-import 'package:battery_2_0/presentation/widgets/app_text_styles.dart';
+import 'package:animated_floating_buttons/widgets/animated_floating_action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -12,15 +7,44 @@ import '../../../../../data/providers/logistic/sim/sim_selected_item_provider.da
 import '../../../../../domain/models/departments/logistic/sim_items/sim_items.dart';
 import '../../../../../domain/models/departments/logistic/sim_same_items/sim_same_items.dart';
 import '../../../../widgets/app_colors.dart';
+import '../../../../widgets/app_text_styles.dart';
 
-class SelectedItem extends ConsumerWidget {
+
+class SelectedItem extends ConsumerStatefulWidget {
   final String itemId;
-  const SelectedItem({super.key, required this.itemId});
+  const SelectedItem({Key? key, required this.itemId}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState  <SelectedItem> createState() => _SelectedItem();
+}
 
-    final itemPack = ref.watch(simSelectedItemProvider(itemId));
+
+class _SelectedItem extends ConsumerState <SelectedItem> with SingleTickerProviderStateMixin{
+
+  late Animation<double> animation;
+  late AnimationController animationController;
+  late CurvedAnimation curvedAnimation;
+
+  final GlobalKey<AnimatedFloatingActionButtonState> key = GlobalKey<AnimatedFloatingActionButtonState>();
+
+
+
+  @override
+  void initState(){
+    animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 260));
+    curvedAnimation = CurvedAnimation(curve: Curves.easeInOut, parent: animationController);
+    animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
+    super.initState();
+  }
+
+
+
+  
+
+  @override
+  Widget build(BuildContext context) {
+
+    final itemPack = ref.watch(simSelectedItemProvider(widget.itemId));
 
     return Builder(
       builder: (context){
@@ -165,12 +189,116 @@ class SelectedItem extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  floatingActionButton: FloatingActionButton.extended(
-                    backgroundColor: Colors.amber,
-                    label: Text('меню', style: firm12,),
-                    icon: Icon(MdiIcons.menu, color: firmColor,),
-                    onPressed: (){}
+
+
+                  floatingActionButton: AnimatedFloatingActionButton(
+                    colorStartAnimation: firmColor,
+                    colorEndAnimation: Colors.amber,
+                    durationAnimation: 300,
+                    animatedIconData: AnimatedIcons.menu_close,
+                    key: key,
+                    fabButtons: [
+
+                      Container(
+                        height: 40,
+                        width: 170,
+                        decoration: BoxDecoration(color: Colors.red, shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(10)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            const SizedBox(width: 10,),
+                            Icon(MdiIcons.deleteForever, color: Colors.white,),
+                            const Expanded(child: SizedBox(width: 10,)),
+                            Text('удалить', style: white14),
+                            const SizedBox(width: 10,),
+                          ],
+                        ),
+                      ),
+
+                      Container(
+                        height: 40,
+                        width: 170,
+                        decoration: BoxDecoration(color: firmColor, shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(10)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            const SizedBox(width: 10,),
+                            Icon(MdiIcons.arrowRightCircle, color: Colors.white,),
+                            const Expanded(child: SizedBox(width: 10,)),
+                            Text('переместить', style: white14),
+                            const SizedBox(width: 10,),
+                          ],
+                        ),
+                      ),
+                      
+                      Container(
+                        height: 40,
+                        width: 170,
+                        decoration: BoxDecoration(color: firmColor, shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(10)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            const SizedBox(width: 10,),
+                            Icon(MdiIcons.fileEdit, color: Colors.white,),
+                            const Expanded(child: SizedBox(width: 10,)),
+                            Text('редактировать', style: white14),
+                            const SizedBox(width: 10,),
+                          ],
+                        ),
+                      ),
+
+                      Container(
+                        height: 40,
+                        width: 170,
+                        decoration: BoxDecoration(color: firmColor, shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(10)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            const SizedBox(width: 10,),
+                            Icon(MdiIcons.pauseOctagon, color: Colors.white,),
+                            const Expanded(child: SizedBox(width: 10,)),
+                            Text('статус', style: white14),
+                            const SizedBox(width: 10,),
+                          ],
+                        ),
+                      ),
+
+                      Container(
+                        height: 40,
+                        width: 170,
+                        decoration: BoxDecoration(color: firmColor, shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(10)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            const SizedBox(width: 10,),
+                            Icon(MdiIcons.imagePlus, color: Colors.white,),
+                            const Expanded(child: SizedBox(width: 10,)),
+                            Text('фото', style: white14),
+                            const SizedBox(width: 10,),
+                          ],
+                        ),
+                      ),
+
+                      Container(
+                        height: 40,
+                        width: 170,
+                        decoration: BoxDecoration(color: firmColor, shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(10)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            const SizedBox(width: 10,),
+                            Icon(MdiIcons.clipboardTextClock, color: Colors.white,),
+                            const Expanded(child: SizedBox(width: 10,)),
+                            Text('история', style: white14),
+                            const SizedBox(width: 10,),
+                          ],
+                        ),
+                      ),
+
+                      
+                    ],
                   ),
+
                 );
               }
             );

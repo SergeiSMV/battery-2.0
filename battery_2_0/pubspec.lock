@@ -17,6 +17,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.13.0"
+  animated_floating_buttons:
+    dependency: "direct main"
+    description:
+      name: animated_floating_buttons
+      sha256: cd89653ab917fb0d7ab04d5b5d6807c75de3f002de99b10f63fcf3c5c7133d60
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   animated_splash_screen:
     dependency: "direct main"
     description:
@@ -257,14 +265,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
-  floating_action_bubble:
-    dependency: "direct main"
-    description:
-      name: floating_action_bubble
-      sha256: "760fd392eaf01e5bccf58889ceaf98d3e90f51066a7efd426d5db5888528931a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.4"
   flutter:
     dependency: "direct main"
     description: flutter
