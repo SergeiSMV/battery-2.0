@@ -6,7 +6,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import '../../../../domain/models/user/user.dart';
 import '../../../../domain/repository/server_routers/server_data.dart';
 import '../../../../domain/repository/server_routers/sim.dart';
-import '../../../departments/logistic/sim_storage_impl.dart';
+import '../../../departments/logistic/sim_items_impl.dart';
 import '../../../user/device_impl.dart';
 import '../../../user/user_impl.dart';
 
@@ -51,7 +51,7 @@ final simItemsProvider = StreamProvider.autoDispose<List>((ref) async* {
 
   await for (final result in bStream) {
     List items = jsonDecode(result);
-    List fullNameItems = SimStorageImpl().editDataItems(items);
+    List fullNameItems = SimItemsImpl().editDataItems(items);
     yield fullNameItems;
   }
 

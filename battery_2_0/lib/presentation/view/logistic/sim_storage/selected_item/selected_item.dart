@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-import '../../../../../data/departments/logistic/sim_storage_impl.dart';
+import '../../../../../data/departments/logistic/sim_items_impl.dart';
 import '../../../../../data/providers/logistic/sim/sim_selected_item_provider.dart';
 import '../../../../../data/providers/user/user_accesses_provider.dart';
 import '../../../../../domain/models/departments/logistic/sim_items/sim_items.dart';
@@ -48,7 +48,8 @@ class _SelectedItem extends ConsumerState <SelectedItem> with SingleTickerProvid
 
     final itemPack = ref.watch(simSelectedItemProvider(widget.itemId));
     final allUserAccesses = ref.watch(allAccessesProvider).value;
-    List<Widget> itemMenu = SimStorageImpl().selectedItemFabMenu(allUserAccesses!);
+    // List<Widget> itemMenu = SimStorageImpl().selectedItemFabMenu(allUserAccesses!);
+    List<Widget> itemMenu = SimItemsImpl().selectedItemFabMenu(allUserAccesses!);
 
     return Builder(
       builder: (context){

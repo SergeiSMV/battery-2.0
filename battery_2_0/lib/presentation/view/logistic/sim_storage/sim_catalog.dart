@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../../../data/bloc/logistic/sim_items_bloc.dart';
-import '../../../../data/departments/logistic/sim_storage_impl.dart';
+import '../../../../data/departments/logistic/sim_items_impl.dart';
 import '../../../../data/providers/logistic/sim/items_print_provider.dart';
 import '../../../../data/providers/logistic/sim/sim_items_provider.dart';
 import '../../../../domain/models/departments/logistic/sim_menu_values.dart';
@@ -86,7 +86,7 @@ class _SimCatalogState extends ConsumerState<SimCatalog> {
                       ),
                     ),
                     icon: Icon(MdiIcons.filter, size: 25, color: firmColor),
-                    onSelected: (value){ SimStorageImpl().filterItems(context, itemsState, value); },
+                    onSelected: (value){ SimItemsImpl().filterItems(context, itemsState, value); },
                     itemBuilder: (BuildContext context) { 
                       return FilterItems.choices.map((String choice) {
                         return PopupMenuItem<String>(
@@ -139,8 +139,20 @@ class _SimCatalogState extends ConsumerState<SimCatalog> {
                                     contentPadding: const EdgeInsets.only(bottom: 15.0, left: 25),
                                     isDense: true,
                                     hintStyle: const TextStyle(fontSize: 15, color: Colors.grey),
-                                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: firmColor.withOpacity(0.8), width: 3,), borderRadius: const BorderRadius.all(Radius.circular(20.0))),
-                                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: firmColor.withOpacity(0.8), width: 2,), borderRadius: const BorderRadius.all(Radius.circular(20.0))),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: firmColor.withOpacity(0.8), 
+                                        width: 3,
+                                      ), 
+                                      borderRadius: const BorderRadius.all(Radius.circular(20.0))
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: firmColor.withOpacity(0.8), 
+                                        width: 2,
+                                      ), 
+                                      borderRadius: const BorderRadius.all(Radius.circular(20.0))
+                                    ),
                                     prefixIcon: Icon(MdiIcons.magnify, size: 25, color: firmColor,),
                                     suffixIcon: searchController.text.isEmpty ? 
                                       const SizedBox.shrink() 
@@ -203,7 +215,7 @@ class _SimCatalogState extends ConsumerState<SimCatalog> {
                                           final messenger = ScaffoldMessenger.of(context);
                                           final progress = ProgressHUD.of(context);
                                           progress?.showWithText('отправляем...');
-                                          await SimStorageImpl().sendQrCodes(selectedItems.toList()).then((value) {
+                                          await SimItemsImpl().sendQrCodes(selectedItems.toList()).then((value) {
                                             value == 'done' ? {
                                               selectedContainer = !selectedContainer,
                                               selectedItems.clear(),
