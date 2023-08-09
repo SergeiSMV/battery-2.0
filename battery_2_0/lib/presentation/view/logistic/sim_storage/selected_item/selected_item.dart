@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import '../../../../../data/departments/logistic/sim_storage_impl.dart';
 import '../../../../../data/providers/logistic/sim/sim_selected_item_provider.dart';
+import '../../../../../data/providers/user/user_accesses_provider.dart';
 import '../../../../../domain/models/departments/logistic/sim_items/sim_items.dart';
 import '../../../../../domain/models/departments/logistic/sim_same_items/sim_same_items.dart';
 import '../../../../widgets/app_colors.dart';
@@ -45,6 +47,8 @@ class _SelectedItem extends ConsumerState <SelectedItem> with SingleTickerProvid
   Widget build(BuildContext context) {
 
     final itemPack = ref.watch(simSelectedItemProvider(widget.itemId));
+    final allUserAccesses = ref.watch(allAccessesProvider).value;
+    List<Widget> itemMenu = SimStorageImpl().selectedItemFabMenu(allUserAccesses!);
 
     return Builder(
       builder: (context){
@@ -191,114 +195,15 @@ class _SelectedItem extends ConsumerState <SelectedItem> with SingleTickerProvid
                   ),
 
 
-                  floatingActionButton: AnimatedFloatingActionButton(
-                    colorStartAnimation: firmColor,
-                    colorEndAnimation: Colors.amber,
-                    durationAnimation: 300,
-                    animatedIconData: AnimatedIcons.menu_close,
-                    key: key,
-                    fabButtons: [
-
-                      Container(
-                        height: 40,
-                        width: 170,
-                        decoration: BoxDecoration(color: Colors.red, shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(10)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            const SizedBox(width: 10,),
-                            Icon(MdiIcons.deleteForever, color: Colors.white,),
-                            const Expanded(child: SizedBox(width: 10,)),
-                            Text('удалить', style: white14),
-                            const SizedBox(width: 10,),
-                          ],
-                        ),
-                      ),
-
-                      Container(
-                        height: 40,
-                        width: 170,
-                        decoration: BoxDecoration(color: firmColor, shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(10)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            const SizedBox(width: 10,),
-                            Icon(MdiIcons.arrowRightCircle, color: Colors.white,),
-                            const Expanded(child: SizedBox(width: 10,)),
-                            Text('переместить', style: white14),
-                            const SizedBox(width: 10,),
-                          ],
-                        ),
-                      ),
-                      
-                      Container(
-                        height: 40,
-                        width: 170,
-                        decoration: BoxDecoration(color: firmColor, shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(10)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            const SizedBox(width: 10,),
-                            Icon(MdiIcons.fileEdit, color: Colors.white,),
-                            const Expanded(child: SizedBox(width: 10,)),
-                            Text('редактировать', style: white14),
-                            const SizedBox(width: 10,),
-                          ],
-                        ),
-                      ),
-
-                      Container(
-                        height: 40,
-                        width: 170,
-                        decoration: BoxDecoration(color: firmColor, shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(10)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            const SizedBox(width: 10,),
-                            Icon(MdiIcons.pauseOctagon, color: Colors.white,),
-                            const Expanded(child: SizedBox(width: 10,)),
-                            Text('статус', style: white14),
-                            const SizedBox(width: 10,),
-                          ],
-                        ),
-                      ),
-
-                      Container(
-                        height: 40,
-                        width: 170,
-                        decoration: BoxDecoration(color: firmColor, shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(10)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            const SizedBox(width: 10,),
-                            Icon(MdiIcons.imagePlus, color: Colors.white,),
-                            const Expanded(child: SizedBox(width: 10,)),
-                            Text('фото', style: white14),
-                            const SizedBox(width: 10,),
-                          ],
-                        ),
-                      ),
-
-                      Container(
-                        height: 40,
-                        width: 170,
-                        decoration: BoxDecoration(color: firmColor, shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(10)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            const SizedBox(width: 10,),
-                            Icon(MdiIcons.clipboardTextClock, color: Colors.white,),
-                            const Expanded(child: SizedBox(width: 10,)),
-                            Text('история', style: white14),
-                            const SizedBox(width: 10,),
-                          ],
-                        ),
-                      ),
-
-                      
-                    ],
-                  ),
-
+                  floatingActionButton: itemMenu.length == 1 ? const SizedBox.shrink() :
+                    AnimatedFloatingActionButton(
+                      colorStartAnimation: firmColor,
+                      colorEndAnimation: Colors.amber,
+                      durationAnimation: 300,
+                      animatedIconData: AnimatedIcons.menu_close,
+                      key: key,
+                      fabButtons: itemMenu
+                    ),
                 );
               }
             );
@@ -306,153 +211,6 @@ class _SelectedItem extends ConsumerState <SelectedItem> with SingleTickerProvid
         );
       }
     );
-
-
-    // return Builder(
-    //   builder: (context) {
-
-    //     SimItems item = SimItems(item: itemData);
-
-    //     print(item);
-
-    //     return Scaffold(
-
-    //       appBar: AppBar(
-    //         leading: IconButton(
-    //           onPressed: () { Navigator.pop(context); },
-    //           icon: Icon(Icons.keyboard_arrow_left, color: firmColor, size: 25,),
-    //         ),
-    //         backgroundColor: appBarColor(item.status),
-    //         title: Column(
-    //           crossAxisAlignment: CrossAxisAlignment.start,
-    //           children: [
-    //             Text(name, style: firm14,),
-    //             Text(item.producer, style: grey12,),
-    //           ],
-    //         ),
-    //       ),
-
-    //       body: SingleChildScrollView(
-    //         physics: const BouncingScrollPhysics(),
-    //         child: Column(
-    //           mainAxisSize: MainAxisSize.min,
-    //           mainAxisAlignment: MainAxisAlignment.center,
-    //           children: [
-    //             const SizedBox(height: 10,),
-    //             item.images.isEmpty ? 
-    //               Center(child: Image.asset('lib/images/no_photo.png', scale: 2.0, color: firmColor.withOpacity(0.5))) 
-    //               : 
-    //               Text('есть фото', style: firm14,),
-    //             Divider(indent: 20, endIndent: 20, thickness: 1.0, color: firmColor.withOpacity(0.4),),
-    //             Container(
-    //               width: MediaQuery.of(context).size.width * 0.9,
-    //               decoration: BoxDecoration(color: Colors.blue.shade100.withOpacity(0.5), shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(5)),
-    //               child: Padding(
-    //                 padding: const EdgeInsets.all(10),
-    //                 child: Column(
-    //                   mainAxisSize: MainAxisSize.min,
-    //                   crossAxisAlignment: CrossAxisAlignment.start,
-    //                   children: [
-    //                     Text('• Место хранения: ${item.place}', style: firm14,),
-    //                     const SizedBox(height: 4,),
-    //                     Text('• Ячейка: ${item.cell}', style: firm14,),
-    //                     const SizedBox(height: 4,),
-    //                     Text('• Количество в ячейке: ${item.quantity} ${item.unit}.', style: firm14,),
-    //                     const SizedBox(height: 4,),
-    //                     Text('• Количество в резерве: ${item.reserve} ${item.unit}.', style: firm14,),
-    //                     const SizedBox(height: 4,),
-    //                     Text('• Статус: ${itemStatus(item.status)}', style: firm14,),
-    //                     const SizedBox(height: 4,),
-    //                     Text('• Размер паллета: ${item.palletSize == 'big' ? 'большой' : 'стандартный'}', style: firm14,),
-    //                     const SizedBox(height: 4,),
-    //                     Text('• FIFO: ${item.fifo}', style: firm14,),
-    //                     const SizedBox(height: 4,),
-    //                     Text('• Принял: ${item.author}', style: firm14,),
-    //                   ],
-    //                 ),
-    //               ),
-    //             ),
-    //             Divider(indent: 20, endIndent: 20, thickness: 1.0, color: firmColor.withOpacity(0.4),),
-    //             Container(
-    //               width: MediaQuery.of(context).size.width * 0.9,
-    //               decoration: BoxDecoration(color: Colors.blue.shade100.withOpacity(0.1), shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(5)),
-    //               child: Padding(
-    //                 padding: const EdgeInsets.all(10),
-    //                 child: Column(
-    //                   mainAxisSize: MainAxisSize.min,
-    //                   crossAxisAlignment: CrossAxisAlignment.start,
-    //                   children: [
-    //                     Text('• Комментарии:' , style: firm14,),
-    //                     const SizedBox(height: 4,),
-    //                     Padding(
-    //                       padding: const EdgeInsets.only(left: 8),
-    //                       child: item.comment[0] == '' ? Text('комментарии отсутствуют', style: firm14,) : ListView.builder(
-    //                         physics: const NeverScrollableScrollPhysics(),
-    //                         shrinkWrap: true,
-    //                         itemCount: item.comment.length,
-    //                         itemBuilder: (context, index){
-    //                           return Column(
-    //                             mainAxisSize: MainAxisSize.min,
-    //                             crossAxisAlignment: CrossAxisAlignment.start,
-    //                             children: [
-    //                               Text('${item.comment[index]};', style: firm12,),
-    //                               const SizedBox(height: 3,)
-    //                             ],
-    //                           );
-    //                         }
-    //                       ),
-    //                     )
-    //                   ],
-    //                 ),
-    //               ),
-    //             ),
-    //             Divider(indent: 20, endIndent: 20, thickness: 1.0, color: firmColor.withOpacity(0.4),),
-    //             Container(
-    //               width: MediaQuery.of(context).size.width * 0.9,
-    //               decoration: BoxDecoration(color: Colors.blue.shade100.withOpacity(0.3), shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(5)),
-    //               child: Padding(
-    //                 padding: const EdgeInsets.all(10),
-    //                 child: Column(
-    //                   mainAxisSize: MainAxisSize.min,
-    //                   crossAxisAlignment: CrossAxisAlignment.start,
-    //                   children: [
-    //                     Text('• Всего на хранении: ${sameItems['total']} ${item.unit}.' , style: firm14,),
-    //                     const SizedBox(height: 4,),
-    //                     Text('• Места хранения:' , style: firm14,),
-    //                     const SizedBox(height: 4,),
-    //                     Padding(
-    //                       padding: const EdgeInsets.only(left: 5),
-    //                       child: ListView.builder(
-    //                         physics: const NeverScrollableScrollPhysics(),
-    //                         shrinkWrap: true,
-    //                         itemCount: smItems.length,
-    //                         itemBuilder: (context, index){
-    //                           return Row(
-    //                             children: [
-    //                               sameItemsIcon(smItems[index]['status']),
-    //                               const SizedBox(width: 10,),
-    //                               Expanded(child: Text('${smItems[index]['place']} (${smItems[index]['producer']})', style: firm12,))
-    //                             ],
-    //                           );
-    //                         }
-    //                       ),
-    //                     )
-    //                   ],
-    //                 ),
-    //               ),
-    //             ),
-    //             Divider(indent: 20, endIndent: 20, thickness: 1.0, color: firmColor.withOpacity(0.4),),
-    //           ],
-    //         ),
-    //       ),
-    //     );
-    //   }
-    // );
-
-
-
-
-
   }
 }
 

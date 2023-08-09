@@ -12,6 +12,7 @@ import '../../../domain/repository/departments/accesses_names.dart';
 import '../../../domain/repository/departments/logistic/sim_storage_repo.dart';
 import '../../../domain/repository/server_routers/server_data.dart';
 import '../../../domain/repository/server_routers/sim.dart';
+import '../../../presentation/view/logistic/sim_storage/selected_item/selected_item_fabmenu.dart';
 import '../../bloc/logistic/sim_items_bloc.dart';
 
 class SimStorageImpl extends SimStorageRepository{
@@ -22,7 +23,6 @@ class SimStorageImpl extends SimStorageRepository{
     List sim = [];
 
     var catalog = {'description': 'каталог', 'route': '/logistic/sim/catalog', 'icon': MdiIcons.bookOpenPageVariantOutline,};
-    // var search = {'description': 'поиск', 'route': '/logistic/sim/search', 'icon': MdiIcons.magnify,};
     var identification = {'description': 'идентификация', 'route': '/logistic/sim/identification', 'icon': MdiIcons.qrcode,};
 
     sim.add(catalog);
@@ -117,36 +117,7 @@ class SimStorageImpl extends SimStorageRepository{
     }
   }
   
-  // сбор одинаковых ТМЦ согласно выбранному УДАЛИТЬ ПОСЛЕ СОДАНИЯ ЗАПРОСА sim_selected_item
-  @override
-  Map sameItems(List items, String fullName) {
-
-    int totalQuantity = 0;
-    List allPlaces = [];
-
-    for (var s in items){
-      if (s['fullName'] == fullName){
-        s.remove('date');
-        int val = s['quantity'];
-        totalQuantity = totalQuantity + val;
-
-        allPlaces.add({
-          'place': '${s['place']} ${s['cell']} - ${s['quantity']} ${s['unit']}.',
-          'status': '${s['status']}',
-          'producer': '${s['producer']}'
-        });
-      }
-    }
-
-    Map sItems = {
-      'total': totalQuantity,
-      'items': allPlaces
-    };
-
-    return sItems;
-    
-  }
-  
+  // сбор одинаковых ТМЦ согласно выбранному
   @override
   Future selectedItem(String itemId) async {
     bool isConnected = true;
@@ -169,6 +140,30 @@ class SimStorageImpl extends SimStorageRepository{
         return '$_ (server EXCEPTION)';
       }
     }
+  }
+  
+  @override
+  List<Widget> selectedItemFabMenu(Accesses? allAccesses) {
+    const String dependence = 'склад сырья и материалов';
+    List<Widget> itemMenu = [const SizedBox.shrink()];
+
+    for (var dp in allAccesses!.accessesList) {
+      dp['depence'] == dependence && dp['chapter'] == simDelete ? itemMenu.add(delItem) : null;
+    }
+    
+    for (var dp in allAccesses.accessesList) {
+      
+      dp['depence'] == dependence && dp['chapter'] == simMoving ? itemMenu.add(itemMoving) : null;
+      dp['depence'] == dependence && dp['chapter'] == simEdit ? itemMenu.add(itemEdit) : null;
+      dp['depence'] == dependence && dp['chapter'] == simStatus ? itemMenu.add(itemStatus) : null;
+      dp['depence'] == dependence && dp['chapter'] == simAddPhoto ? itemMenu.add(itemAddPhoto) : null;
+      dp['depence'] == dependence && dp['chapter'] == simHistory ? itemMenu.add(itemHistory) : null;
+
+      // dp['depence'] == dependence && dp['chapter'] == simDelPhoto ? itemMenu.add(dp['chapter']) : null;
+
+    }
+
+    return itemMenu;
   }
 
   
