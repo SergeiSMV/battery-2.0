@@ -119,16 +119,16 @@ class SimItemsImpl extends SimItemsRepository{
     List<Widget> itemMenu = [const SizedBox.shrink()];
 
     for (var dp in allAccesses!.accessesList) {
-      dp['depence'] == dependence && dp['chapter'] == simDelete ? itemMenu.add(delItem) : null;
+      dp['depence'] == dependence && dp['chapter'] == simDelete ? itemMenu.add(delItem()) : null;
     }
     
     for (var dp in allAccesses.accessesList) {
       
-      dp['depence'] == dependence && dp['chapter'] == simMoving ? itemMenu.add(itemMoving) : null;
-      dp['depence'] == dependence && dp['chapter'] == simEdit ? itemMenu.add(itemEdit) : null;
-      dp['depence'] == dependence && dp['chapter'] == simStatus ? itemMenu.add(itemStatus) : null;
-      dp['depence'] == dependence && dp['chapter'] == simAddPhoto ? itemMenu.add(itemAddPhoto) : null;
-      dp['depence'] == dependence && dp['chapter'] == simHistory ? itemMenu.add(itemHistory) : null;
+      dp['depence'] == dependence && dp['chapter'] == simMoving ? itemMenu.add(itemMoving()) : null;
+      dp['depence'] == dependence && dp['chapter'] == simEdit ? itemMenu.add(itemEdit()) : null;
+      dp['depence'] == dependence && dp['chapter'] == simStatus ? itemMenu.add(itemStatus()) : null;
+      dp['depence'] == dependence && dp['chapter'] == simAddPhoto ? itemMenu.add(itemAddPhoto()) : null;
+      dp['depence'] == dependence && dp['chapter'] == simHistory ? itemMenu.add(itemHistory()) : null;
 
       // dp['depence'] == dependence && dp['chapter'] == simDelPhoto ? itemMenu.add(dp['chapter']) : null;
 
