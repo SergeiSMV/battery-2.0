@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 
 import 'package:battery_2_0/data/bloc/logistic/sim_items_bloc.dart';
@@ -114,12 +112,12 @@ class SimItemsImpl extends SimItemsRepository{
 
   // FAB меню выбранной позиции
   @override
-  List<Widget> selectedItemFabMenu(Accesses? allAccesses, BuildContext context) {
+  List<Widget> selectedItemFabMenu(Accesses? allAccesses, BuildContext context, String id, String palletSize) {
     const String dependence = 'склад сырья и материалов';
     List<Widget> itemMenu = [const SizedBox.shrink()];
 
     for (var dp in allAccesses!.accessesList) {
-      dp['depence'] == dependence && dp['chapter'] == simDelete ? itemMenu.add(delItem(context)) : null;
+      dp['depence'] == dependence && dp['chapter'] == simDelete ? itemMenu.add(delItem(context, id, palletSize)) : null;
     }
     
     for (var dp in allAccesses.accessesList) {
@@ -135,6 +133,30 @@ class SimItemsImpl extends SimItemsRepository{
     }
 
     return itemMenu;
+  }
+  
+  @override
+  Future<String> deleteItem(String id, String palletSize) async {
+    bool isConnected = true;
+    WebSocketChannel channel = WebSocketChannel.connect(Uri.parse('$mainRoute$simDeleteItem'));
+    await channel.ready.onError((error, stackTrace) => isConnected = false);
+
+    if(isConnected == false){
+      return 'сервер отключен';
+    } else {
+      try{
+        dynamic result;
+        channel.sink.add(jsonEncode({'itemId': id, 'pallet_size': palletSize}));
+        await channel.stream.single.then((value) {
+          result = jsonDecode(value);
+        });
+        return result;
+      } on Error catch (_){
+        return '$_ (server ERROR)';
+      } on Exception catch (_){
+        return '$_ (server EXCEPTION)';
+      }
+    }
   }
 
 

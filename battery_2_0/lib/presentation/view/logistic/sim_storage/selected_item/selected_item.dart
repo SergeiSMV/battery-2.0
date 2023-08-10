@@ -46,7 +46,7 @@ class _SelectedItem extends ConsumerState <SelectedItem> with SingleTickerProvid
 
     final itemPack = ref.watch(simSelectedItemProvider(widget.itemId));
     final allUserAccesses = ref.watch(allAccessesProvider).value;
-    List<Widget> itemMenu = SimItemsImpl().selectedItemFabMenu(allUserAccesses!, widget.simCatalogContext);
+    
 
     return Consumer(
       builder: ((context, ref, child) {
@@ -54,9 +54,14 @@ class _SelectedItem extends ConsumerState <SelectedItem> with SingleTickerProvid
           loading: () => const Scaffold(body: Center(child: CircularProgressIndicator(strokeWidth: 2.0,))),
           error: (error, _) => Text(error.toString()), 
           data: (data) {
-    
+
+            
             SimItems item = SimItems(item: data['selected_item']);
             int totalQuantity = data['total_quantity'];
+
+            List<Widget> itemMenu = SimItemsImpl().selectedItemFabMenu(allUserAccesses!, widget.simCatalogContext, item.id, item.palletSize);
+
+            print(item);
     
             return Scaffold(
               appBar: AppBar(

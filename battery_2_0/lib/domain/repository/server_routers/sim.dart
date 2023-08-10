@@ -10,3 +10,7 @@ String simCreateQrcode = 'sim_create_qrcode';
 
 // Информация о выбранной позиции
 String simSelectedItem = 'sim_selected_item';
+
+// Удаление выбранной позиции
+String simDeleteItem = 'sim_delete_item';
+

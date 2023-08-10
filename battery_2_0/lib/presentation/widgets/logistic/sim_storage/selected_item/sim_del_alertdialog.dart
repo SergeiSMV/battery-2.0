@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:lottie/lottie.dart';
 
-simDeleteAlertDialog(BuildContext simCatalogContext){
+import '../../../../../data/departments/logistic/sim_items_impl.dart';
+
+simDeleteAlertDialog(BuildContext simCatalogContext, String id, String palletSize){
   return showDialog(
     context: simCatalogContext,
     builder: (context) {
@@ -21,12 +23,19 @@ simDeleteAlertDialog(BuildContext simCatalogContext){
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(onPressed: (){
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  final progress = ProgressHUD.of(simCatalogContext);
-                  progress?.showWithText('удаляем');
-                }, child: Text('удалить', style: red16,)),
+                TextButton(
+                  onPressed: () async {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    final messenger = ScaffoldMessenger.of(simCatalogContext);
+                    final progress = ProgressHUD.of(simCatalogContext);
+                    progress?.showWithText('удаляем');
+                    String deleteResult = await SimItemsImpl().deleteItem(id, palletSize);
+                    progress?.dismiss();
+                    deleteResult == 'done' ? messenger.toast('удалено') : messenger.toast(deleteResult);
+                  }, 
+                  child: Text('удалить', style: red16,)
+                ),
                 const SizedBox(width: 20,),
                 TextButton(onPressed: (){ Navigator.pop(context); }, child: Text('отмена', style: firm16,)),
               ],
@@ -36,3 +45,15 @@ simDeleteAlertDialog(BuildContext simCatalogContext){
       );
     });
   }
+
+
+  extension on ScaffoldMessengerState {
+  void toast(String message){
+    showSnackBar(
+      SnackBar(
+        content: Text(message, style: white16,), 
+        duration: const Duration(seconds: 4),
+      )
+    );
+  }
+}

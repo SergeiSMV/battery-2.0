@@ -9,7 +9,7 @@ import '../../../app_colors.dart';
 import 'sim_del_alertdialog.dart';
 
 // удаление позиции
-Widget delItem(BuildContext context){
+Widget delItem(BuildContext context, String id, String palletSize){
   return Row(
     children: [
       Bubble(
@@ -25,7 +25,7 @@ Widget delItem(BuildContext context){
         elevation: 3.0,
         backgroundColor: Colors.red,
         heroTag: 'delItems',
-        onPressed: (){ simDeleteAlertDialog(context); },
+        onPressed: (){ simDeleteAlertDialog(context, id, palletSize); },
         child: Icon(MdiIcons.deleteForever, color: Colors.white, size: 25,),
       ),
     ],
