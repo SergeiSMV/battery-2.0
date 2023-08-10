@@ -1,4 +1,5 @@
 
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../data/user/device_impl.dart';
@@ -66,6 +67,7 @@ final router = GoRouter(
                   name: 'selected_item',
                   builder: ((context, state) => SelectedItem(
                     itemId: '${state.pathParameters['itemId']}',
+                    simCatalogContext: state.extra as BuildContext
                   )),
                 ),
               ]

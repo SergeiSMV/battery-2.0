@@ -13,7 +13,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import '../../../domain/repository/departments/accesses_names.dart';
 import '../../../domain/repository/server_routers/server_data.dart';
 import '../../../domain/repository/server_routers/sim.dart';
-import '../../../presentation/view/logistic/sim_storage/selected_item/selected_item_fabmenu.dart';
+import '../../../presentation/widgets/logistic/sim_storage/selected_item/selected_item_fabmenu.dart';
 
 class SimItemsImpl extends SimItemsRepository{
 
@@ -114,12 +114,12 @@ class SimItemsImpl extends SimItemsRepository{
 
   // FAB меню выбранной позиции
   @override
-  List<Widget> selectedItemFabMenu(Accesses? allAccesses) {
+  List<Widget> selectedItemFabMenu(Accesses? allAccesses, BuildContext context) {
     const String dependence = 'склад сырья и материалов';
     List<Widget> itemMenu = [const SizedBox.shrink()];
 
     for (var dp in allAccesses!.accessesList) {
-      dp['depence'] == dependence && dp['chapter'] == simDelete ? itemMenu.add(delItem()) : null;
+      dp['depence'] == dependence && dp['chapter'] == simDelete ? itemMenu.add(delItem(context)) : null;
     }
     
     for (var dp in allAccesses.accessesList) {

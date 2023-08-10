@@ -332,7 +332,7 @@ class _SimCatalogState extends ConsumerState<SimCatalog> {
                                                         ],
                                                       ),
                                                       onTap: () {
-                                                        context.pushNamed('selected_item', pathParameters: { 'itemId': item.id, });
+                                                        context.pushNamed('selected_item', pathParameters: {'itemId': item.id}, extra: context);
                                                       },
                                                     ),
                                                   ),

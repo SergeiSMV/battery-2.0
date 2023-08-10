@@ -11,7 +11,7 @@ abstract class SimItemsRepository{
   void filterItems(BuildContext context, List items, String filter);
 
   // FAB меню выбранной позиции
-  List<Widget> selectedItemFabMenu(Accesses? allAccesses);
+  List<Widget> selectedItemFabMenu(Accesses? allAccesses, BuildContext context);
 
   // запрос конкретного ТМЦ со списком одинаковых ТМЦ согласно выбранному
   Future selectedItem(String itemId);
