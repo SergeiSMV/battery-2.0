@@ -7,10 +7,13 @@ import 'package:lottie/lottie.dart';
 
 import '../../../../../data/departments/logistic/sim_items_impl.dart';
 
-simDeleteAlertDialog(BuildContext simCatalogContext, String id, String palletSize){
+simDeleteAlertDialog(BuildContext simCatalogContext, Map itemData){
   return showDialog(
     context: simCatalogContext,
     builder: (context) {
+
+      print('itemData: $itemData');
+
       return AlertDialog(
         backgroundColor: Colors.white,
         content: Column(
@@ -30,7 +33,7 @@ simDeleteAlertDialog(BuildContext simCatalogContext, String id, String palletSiz
                     final messenger = ScaffoldMessenger.of(simCatalogContext);
                     final progress = ProgressHUD.of(simCatalogContext);
                     progress?.showWithText('удаляем');
-                    String deleteResult = await SimItemsImpl().deleteItem(id, palletSize);
+                    String deleteResult = await SimItemsImpl().deleteItem(itemData);
                     progress?.dismiss();
                     deleteResult == 'done' ? messenger.toast('удалено') : messenger.toast(deleteResult);
                   }, 

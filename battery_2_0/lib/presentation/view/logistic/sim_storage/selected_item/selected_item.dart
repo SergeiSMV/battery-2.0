@@ -39,6 +39,13 @@ class _SelectedItem extends ConsumerState <SelectedItem> with SingleTickerProvid
     animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
     super.initState();
   }
+
+
+  @override
+  void dispose(){
+    animationController.dispose();
+    super.dispose();
+  }
   
 
   @override
@@ -59,9 +66,7 @@ class _SelectedItem extends ConsumerState <SelectedItem> with SingleTickerProvid
             SimItems item = SimItems(item: data['selected_item']);
             int totalQuantity = data['total_quantity'];
 
-            List<Widget> itemMenu = SimItemsImpl().selectedItemFabMenu(allUserAccesses!, widget.simCatalogContext, item.id, item.palletSize);
-
-            print(item);
+            List<Widget> itemMenu = SimItemsImpl().selectedItemFabMenu(allUserAccesses!, widget.simCatalogContext, Map.from(data['selected_item']));
     
             return Scaffold(
               appBar: AppBar(

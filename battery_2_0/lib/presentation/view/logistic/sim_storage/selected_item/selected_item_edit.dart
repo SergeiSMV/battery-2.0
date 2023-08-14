@@ -1,0 +1,210 @@
+
+import 'package:battery_2_0/presentation/widgets/app_text_styles.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_progress_hud/flutter_progress_hud.dart';
+
+
+import '../../../../../data/departments/logistic/sim_items_impl.dart';
+import '../../../../../domain/models/departments/logistic/sim_items/sim_items.dart';
+import '../../../../widgets/app_colors.dart';
+
+class SelectedItemEdit extends StatefulWidget {
+  final Map itemData;
+  const SelectedItemEdit({super.key, required this.itemData});
+
+  @override
+  State<SelectedItemEdit> createState() => _SelectedItemEditState();
+}
+
+class _SelectedItemEditState extends State<SelectedItemEdit> {
+
+  
+
+  late SimItems item;
+  late Map dataToSave;
+
+  TextEditingController categoryCntr = TextEditingController(text: '');
+  TextEditingController nameCntr = TextEditingController();
+  TextEditingController colorCntr = TextEditingController();
+  TextEditingController producerCntr = TextEditingController();
+  TextEditingController unitCntr = TextEditingController();
+  TextEditingController quantityCntr = TextEditingController();
+  TextEditingController fifoCntr = TextEditingController();
+
+  @override
+  void initState(){
+    item = SimItems(item: Map.from(widget.itemData));
+    dataToSave = Map.from(widget.itemData);
+    categoryCntr.text = dataToSave['category'];
+    nameCntr.text = dataToSave['name'];
+    colorCntr.text = dataToSave['color'];
+    producerCntr.text = dataToSave['producer'];
+    unitCntr.text = dataToSave['unit'];
+    quantityCntr.text = dataToSave['quantity'].toString();
+    fifoCntr.text = dataToSave['fifo'];
+    super.initState();
+  }
+
+
+
+  
+  @override
+  Widget build(BuildContext context) {
+
+    bool compire = mapEquals(widget.itemData, dataToSave);
+    final messenger = ScaffoldMessenger.of(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 1,
+        leading: IconButton(
+          onPressed: () { Navigator.pop(context); },
+          icon: Icon(Icons.keyboard_arrow_left, color: firmColor, size: 25,),
+        ),
+        backgroundColor: Colors.green.shade50,
+        title: Text('редактирование', style: firm14,),
+      ),
+      body: ProgressHUD(
+        padding: const EdgeInsets.all(20.0),
+        child: Builder(
+          builder: (context) {
+            return Container(
+              height: double.infinity,
+              width: double.infinity,
+              color: Colors.white,
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 25),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 10),
+                      Text('Текущие данные:', style: firm16,),
+                      const SizedBox(height: 10),
+                      Text('категория: ${item.category}', style: firm14,),
+                      Text('наименование: ${item.name}', style: firm14,),
+                      Text('цвет: ${item.color.isEmpty ? "-" : item.color}', style: firm14,),
+                      Text('поствщик: ${item.producer}', style: firm14,),
+                      Text('количество: ${item.quantity.toString()} ${item.unit}.', style: firm14,),
+                      Text('дата поступления: ${item.fifo}', style: firm14,),
+                      Text('размер паллета: ${item.palletSize == 'big' ? 'большой' : 'стандартный'}', style: firm14,),
+                      
+                      const SizedBox(height: 10),
+                      Divider(indent: 0, endIndent: 20, thickness: 1.0, color: firmColor.withOpacity(0.4),),
+                      const SizedBox(height: 10),
+                      
+                      Text('Корректировка данных:', style: firm16,),
+                      const SizedBox(height: 10),
+                      
+                      _enterValue('категория', TextInputType.text, categoryCntr, true, () async {
+                        ProgressHUD.of(context)?.showWithText('загрузка');
+                        await SimItemsImpl().getCategories(context, categoryCntr).then((value) {
+                          ProgressHUD.of(context)?.dismiss();
+                          value is List ? setState((){ 
+                            categoryCntr.text.isEmpty || categoryCntr.text == dataToSave['category'] ? null : {
+                              dataToSave['category'] = categoryCntr.text,
+                              nameCntr.clear(), colorCntr.clear(), producerCntr.clear(), unitCntr.clear()
+                            };
+                          }) : messenger.toast(value);
+                        });
+                      }),
+                      const SizedBox(height: 8),
+                      _enterValue('наименование', TextInputType.text, nameCntr, true, () async {
+                        categoryCntr.text.isEmpty ? messenger.toast('укажите категорию') :
+                        {
+                          ProgressHUD.of(context)?.showWithText('загрузка'),
+                          await SimItemsImpl().getNames(context, nameCntr, categoryCntr.text).then((value) {
+                            ProgressHUD.of(context)?.dismiss();
+                            value is List ? setState((){ 
+                              nameCntr.text.isEmpty ? null : {
+                                dataToSave['name'] = nameCntr.text,
+                                colorCntr.clear(), producerCntr.clear()
+                              };
+                            }) : messenger.toast(value);
+                          })
+                        };
+                      }),
+                      const SizedBox(height: 8),
+                      _enterValue('цвет', TextInputType.text, colorCntr, true, (){}),
+                      const SizedBox(height: 8),
+                      _enterValue('поставщик', TextInputType.text, producerCntr, true, (){}),
+                      const SizedBox(height: 8),
+                      _enterValue('ед.изм.', TextInputType.text, unitCntr, true, (){}),
+                      const SizedBox(height: 8),
+                      _enterValue('количество', TextInputType.number, quantityCntr, false, (){}),
+                      const SizedBox(height: 8),
+                      _enterValue('дата поступления', TextInputType.text, fifoCntr, true, (){}),
+                      const SizedBox(height: 12),
+
+                      categoryCntr.text.isEmpty || nameCntr.text.isEmpty || !compire ? 
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+                          color: Colors.amber.shade600,
+                        ),
+                        height: 40,
+                        width: MediaQuery.of(context).size.width * 0.875,
+                        child: TextButton(onPressed: () {
+                          ProgressHUD.of(context)?.showWithText('вносим изменения');
+                        }, child: Text('сохранить', style: firm14,))
+                      ) : const SizedBox.shrink(),
+                      const SizedBox(height: 8),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
+        ),
+      )
+    );
+  }
+
+  _enterValue(String leading, TextInputType type, TextEditingController controller, bool readOnly, Function func){
+    return Padding(
+      padding: const EdgeInsets.only(left: 0, right: 20),
+      child: Container(
+        decoration: BoxDecoration(color: Colors.green.shade50, borderRadius: BorderRadius.circular(5)),
+        child: Row(
+          children: [
+            const SizedBox(width: 10),
+            Text('$leading:', style: firm14),
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: TextField(
+                  controller: controller,
+                  readOnly: readOnly,
+                  keyboardType: type,
+                  style: TextStyle(fontSize: 13, color: firmColor),
+                  decoration: const InputDecoration(
+                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
+                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
+                    // hintStyle: firm14,
+                    // hintText: hint,
+                  ),
+                  onTap: (){ func(); },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+}
+
+extension on ScaffoldMessengerState {
+  void toast(String message){
+    showSnackBar(
+      SnackBar(
+        content: Text(message), 
+        duration: const Duration(seconds: 4),
+      )
+    );
+  }
+}

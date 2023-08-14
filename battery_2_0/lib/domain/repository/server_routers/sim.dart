@@ -14,3 +14,8 @@ String simSelectedItem = 'sim_selected_item';
 // Удаление выбранной позиции
 String simDeleteItem = 'sim_delete_item';
 
+// Получение списка категорий
+String simGetCategories = 'sim_get_categories';
+
+// Получение списка наименований по категории
+String simGetNames = 'sim_get_names';

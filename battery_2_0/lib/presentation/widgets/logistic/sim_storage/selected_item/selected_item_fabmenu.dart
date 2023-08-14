@@ -3,13 +3,14 @@
 import 'package:battery_2_0/presentation/widgets/app_text_styles.dart';
 import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../../app_colors.dart';
 import 'sim_del_alertdialog.dart';
 
 // удаление позиции
-Widget delItem(BuildContext context, String id, String palletSize){
+Widget delItem(BuildContext context, Map itemData){
   return Row(
     children: [
       Bubble(
@@ -25,12 +26,38 @@ Widget delItem(BuildContext context, String id, String palletSize){
         elevation: 3.0,
         backgroundColor: Colors.red,
         heroTag: 'delItems',
-        onPressed: (){ simDeleteAlertDialog(context, id, palletSize); },
+        onPressed: (){ simDeleteAlertDialog(context, itemData); },
         child: Icon(MdiIcons.deleteForever, color: Colors.white, size: 25,),
       ),
     ],
   );
 }
+
+
+// редактирование позиции
+Widget itemEdit(BuildContext context, Map itemData){
+  return Row(
+    children: [
+      Bubble(
+        color: Colors.grey.shade700.withOpacity(0.9),
+        nip: BubbleNip.rightTop,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 5, right: 5, top: 1, bottom: 1),
+          child: Text('редактировать', style: white14,),
+        ),
+      ),
+      const SizedBox(width: 5,),
+      FloatingActionButton(
+        elevation: 3.0,
+        backgroundColor: firmColor.withOpacity(0.7),
+        heroTag: 'itemEdit',
+        onPressed: (){ context.pushNamed('selected_item_edit', extra: itemData); }, 
+        child: Icon(MdiIcons.squareEditOutline, color: Colors.white, size: 25,),
+      ),
+    ],
+  );
+}
+
 
 // перемещение позиции
 Widget itemMoving(){
@@ -56,29 +83,7 @@ Widget itemMoving(){
   );
 }
 
-// редактирование позиции
-Widget itemEdit(){
-  return Row(
-    children: [
-      Bubble(
-        color: Colors.grey.shade700.withOpacity(0.9),
-        nip: BubbleNip.rightTop,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 5, right: 5, top: 1, bottom: 1),
-          child: Text('редактировать', style: white14,),
-        ),
-      ),
-      const SizedBox(width: 5,),
-      FloatingActionButton(
-        elevation: 3.0,
-        backgroundColor: firmColor.withOpacity(0.7),
-        heroTag: 'itemEdit',
-        onPressed: (){ print('TAP the itemEdit'); }, 
-        child: Icon(MdiIcons.squareEditOutline, color: Colors.white, size: 25,),
-      ),
-    ],
-  );
-}
+
 
 // изменение статуса позиции
 Widget itemStatus(){
