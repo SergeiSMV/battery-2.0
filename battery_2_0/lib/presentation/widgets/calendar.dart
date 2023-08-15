@@ -5,7 +5,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'app_colors.dart';
 
 
-calendar(BuildContext mainContext, Function updateDate){
+calendar(BuildContext mainContext, TextEditingController dateCntr){
   return showModalBottomSheet(
     isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -33,7 +33,7 @@ calendar(BuildContext mainContext, Function updateDate){
                   onDaySelected: (DateTime day, DateTime focusedDay){
                     var formatter = DateFormat('dd.MM.yyyy');
                     String selected = formatter.format(day);
-                    updateDate(selected);
+                    dateCntr.text = selected;
                     Navigator.pop(context);
                   },
                 ),

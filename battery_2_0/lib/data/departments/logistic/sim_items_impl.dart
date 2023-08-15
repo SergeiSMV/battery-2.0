@@ -1,18 +1,16 @@
-import 'dart:convert';
-
 import 'package:battery_2_0/data/bloc/logistic/sim_items_bloc.dart';
 import 'package:battery_2_0/domain/models/accesses/accesses.dart';
 import 'package:battery_2_0/domain/repository/departments/logistic/sim_items_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../../domain/repository/departments/accesses_names.dart';
-import '../../../domain/repository/server_routers/server_data.dart';
-import '../../../domain/repository/server_routers/sim.dart';
+import '../../../domain/repository/server/sim.dart';
 import '../../../presentation/widgets/logistic/sim_storage/selected_item/selected_item_fabmenu.dart';
 import '../../../presentation/widgets/logistic/sim_storage/selected_item/set_item_element.dart';
+import '../../server/connect_impl.dart';
 
 class SimItemsImpl extends SimItemsRepository{
 
@@ -64,56 +62,26 @@ class SimItemsImpl extends SimItemsRepository{
       i.remove('date');
     }
     Map itemsData = {'items': itemsDataList};
-    bool isConnected = true;
-    WebSocketChannel channel = WebSocketChannel.connect(Uri.parse('$mainRoute$simCreateQrcode'));
-    await channel.ready.onError((error, stackTrace) => isConnected = false);
-
-    if(isConnected == false){
-      return 'сервер отключен';
-    } else {
-      try{
-        dynamic result;
-        channel.sink.add(jsonEncode(itemsData));
-        await channel.stream.single.then((value) {
-          result = jsonDecode(value);
-        });
-        return result;
-      } on Error catch (_){
-        return '$_ (server ERROR)';
-      } on Exception catch (_){
-        return '$_ (server EXCEPTION)';
-      }
-    }
+    dynamic requestResult;
+    await ConnectionImpl().request(simCreateQrcode, itemsData).then((value) async {
+      requestResult = value;
+    });
+    return requestResult;
   }
 
   // запрос конкретного ТМЦ со списком одинаковых ТМЦ согласно выбранному
   @override
   Future selectedItem(String itemId) async {
-    bool isConnected = true;
-    WebSocketChannel channel = WebSocketChannel.connect(Uri.parse('$mainRoute$simSelectedItem'));
-    await channel.ready.onError((error, stackTrace) => isConnected = false);
-
-    if(isConnected == false){
-      return 'сервер отключен';
-    } else {
-      try{
-        dynamic result;
-        channel.sink.add(jsonEncode({'itemId': itemId}));
-        await channel.stream.single.then((value) {
-          result = jsonDecode(value);
-        });
-        return result;
-      } on Error catch (_){
-        return '$_ (server ERROR)';
-      } on Exception catch (_){
-        return '$_ (server EXCEPTION)';
-      }
-    }
+    dynamic requestResult;
+    await ConnectionImpl().request(simSelectedItem, {'itemId': itemId}).then((value) async {
+      requestResult = value;
+    });
+    return requestResult;
   }
 
   // FAB меню выбранной позиции
   @override
-  List<Widget> selectedItemFabMenu(Accesses? allAccesses, BuildContext context, Map itemData) {
+  List<Widget> selectedItemFabMenu(Accesses? allAccesses, BuildContext context, Map itemData, Function refresh) {
     const String dependence = 'склад сырья и материалов';
     List<Widget> itemMenu = [const SizedBox.shrink()];
 
@@ -122,104 +90,99 @@ class SimItemsImpl extends SimItemsRepository{
     }
     
     for (var dp in allAccesses.accessesList) {
-      
-      dp['depence'] == dependence && dp['chapter'] == simEdit ? itemMenu.add(itemEdit(context, itemData)) : null;
+      dp['depence'] == dependence && dp['chapter'] == simEdit ? itemMenu.add(itemEdit(context, itemData, refresh)) : null;
       dp['depence'] == dependence && dp['chapter'] == simMoving ? itemMenu.add(itemMoving()) : null;
       dp['depence'] == dependence && dp['chapter'] == simStatus ? itemMenu.add(itemStatus()) : null;
       dp['depence'] == dependence && dp['chapter'] == simAddPhoto ? itemMenu.add(itemAddPhoto()) : null;
       dp['depence'] == dependence && dp['chapter'] == simHistory ? itemMenu.add(itemHistory()) : null;
-
       // dp['depence'] == dependence && dp['chapter'] == simDelPhoto ? itemMenu.add(dp['chapter']) : null;
-
     }
 
     return itemMenu;
   }
   
+  // удаление позиции
   @override
   Future<String> deleteItem(Map itemData) async {
-    bool isConnected = true;
-    WebSocketChannel channel = WebSocketChannel.connect(Uri.parse('$mainRoute$simDeleteItem'));
-    await channel.ready.onError((error, stackTrace) => isConnected = false);
-
-    if(isConnected == false){
-      return 'сервер отключен';
-    } else {
-      try{
-        dynamic result;
-        channel.sink.add(jsonEncode({'itemData': itemData}));
-        await channel.stream.single.then((value) {
-          result = jsonDecode(value);
-        });
-        return result;
-      } on Error catch (_){
-        return '$_ (server ERROR)';
-      } on Exception catch (_){
-        return '$_ (server EXCEPTION)';
-      }
-    }
+    dynamic requestResult;
+    await ConnectionImpl().request(simDeleteItem, {'itemData': itemData}).then((value) async {
+      requestResult = value;
+    });
+    return requestResult;
   }
   
+  // Получение списка категорий
   @override
   Future getCategories(BuildContext context, TextEditingController categoryCntr) async {
-    List categories = [];
-
-    bool isConnected = true;
-    WebSocketChannel channel = WebSocketChannel.connect(Uri.parse('$mainRoute$simGetCategories'));
-    await channel.ready.onError((error, stackTrace) => isConnected = false);
-
-    if(isConnected == false){
-      return 'сервер отключен';
-    } else {
-      try{
-        dynamic result;
-        channel.sink.add(jsonEncode({'itemData': {}}));
-        await channel.stream.single.then((value) {
-          result = jsonDecode(value);
-          categories = result;
-          return setItemElement(context, 'выберите категорию', categories, categoryCntr);
-        });
-        return result;
-      } on Error catch (_){
-        return '$_ (server ERROR)';
-      } on Exception catch (_){
-        return '$_ (server EXCEPTION)';
-      }
-    }
+    dynamic requestResult;
+    await ConnectionImpl().request(simGetCategories, {}).then((value) async {
+      value is List ? await setItemElement(context, 'выберите категорию', value, categoryCntr) : null;
+      requestResult = value;
+    });
+    return requestResult;
+  }
+  
+  // Получение списка наименований по категории
+  @override
+  Future getNames(BuildContext context, TextEditingController nameCntr, Map itemData) async {
+    String category = itemData['category'];
+    Map requestData = {'category': category};
+    dynamic requestResult;
+    await ConnectionImpl().request(simGetNames, requestData).then((value) async {
+      value is List ? await setItemElement(context, 'выберите наименование', value, nameCntr) : null;
+      requestResult = value;
+    });
+    return requestResult;
+  }
+  
+  // Получение списка цветов
+  @override
+  Future getColors(BuildContext context, TextEditingController colorCntr) async {
+    dynamic requestResult;
+    await ConnectionImpl().request(simGetColors, {}).then((value) async {
+      value is List ? await setItemElement(context, 'выберите цвет', value, colorCntr) : null;
+      requestResult = value;
+    });
+    return requestResult;
   }
   
   @override
-  Future getNames(BuildContext context, TextEditingController nameCntr, String category) async {
-    List names = [];
-
-    bool isConnected = true;
-    WebSocketChannel channel = WebSocketChannel.connect(Uri.parse('$mainRoute$simGetNames'));
-    await channel.ready.onError((error, stackTrace) => isConnected = false);
-
-    if(isConnected == false){
-      return 'сервер отключен';
-    } else {
-      try{
-        dynamic result;
-        channel.sink.add(jsonEncode({'category': category}));
-        await channel.stream.single.then((value) {
-          result = jsonDecode(value);
-          names = result;
-          return setItemElement(context, 'выберите наименование', names, nameCntr);
-        });
-        return result;
-      } on Error catch (_){
-        return '$_ (server ERROR)';
-      } on Exception catch (_){
-        return '$_ (server EXCEPTION)';
-      }
-    }
+  Future getProducers(BuildContext context, TextEditingController colorCntr, Map itemData) async {
+    String category = itemData['category'];
+    String name = itemData['name'];
+    Map requestData = {'category': category, 'name': name};
+    dynamic requestResult;
+    await ConnectionImpl().request(simGetProducers, requestData).then((value) async {
+      value is List ? await setItemElement(context, 'выберите поставщика', value, colorCntr) : null;
+      requestResult = value;
+    });
+    return requestResult;
   }
   
   @override
-  Future getColors(BuildContext context, TextEditingController colorCntr, String category) {
-    // TODO: implement getColors
-    throw UnimplementedError();
+  Future getUnits(BuildContext context, TextEditingController colorCntr, Map itemData) async {
+    String category = itemData['category'];
+    String name = itemData['name'];
+    String producer = itemData['producer'];
+    Map requestData = {'category': category, 'name': name, 'producer': producer};
+    dynamic requestResult;
+    await ConnectionImpl().request(simGetUnits, requestData).then((value) async {
+      value is List ? await setItemElement(context, 'выберите ед. измерения', value, colorCntr) : null;
+      requestResult = value;
+    });
+    return requestResult;
+  }
+  
+  @override
+  Future saveEdit(Map dataToSave, Map defaultData) async {
+    final userInfo = GetStorage().read('info');
+    String author = '${userInfo['surname']} ${userInfo['name'][0]}.${userInfo['patronymic'][0]}.';
+    Map requestData = { 'dataToSave': dataToSave, 'defaultData': defaultData, 'author': author };
+    dynamic requestResult;
+    await ConnectionImpl().request(simSaveItemEdit, requestData).then((value) async {
+      requestResult = value;
+    });
+    return requestResult;
   }
 
 

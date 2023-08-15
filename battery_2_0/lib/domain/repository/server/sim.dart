@@ -19,3 +19,15 @@ String simGetCategories = 'sim_get_categories';
 
 // Получение списка наименований по категории
 String simGetNames = 'sim_get_names';
+
+// Получение списка цветов по категории и наименованию
+String simGetColors = 'sim_get_colors';
+
+// Получение списка поставщиков по категории и наименованию
+String simGetProducers = 'sim_get_producers';
+
+// Получение списка ед. измерения по категории, наименованию и поставщику
+String simGetUnits = 'sim_get_units';
+
+// Сохранение отредактированной позиции
+String simSaveItemEdit = 'sim_save_item_edit';

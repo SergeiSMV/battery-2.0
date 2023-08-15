@@ -367,7 +367,7 @@ extension on ScaffoldMessengerState {
   void toast(String message){
     showSnackBar(
       SnackBar(
-        content: Center(child: Text(message)), 
+        content: Text(message), 
         duration: const Duration(seconds: 4),
       )
     );

@@ -35,7 +35,7 @@ Widget delItem(BuildContext context, Map itemData){
 
 
 // редактирование позиции
-Widget itemEdit(BuildContext context, Map itemData){
+Widget itemEdit(BuildContext context, Map itemData, Function refresh){
   return Row(
     children: [
       Bubble(
@@ -51,7 +51,7 @@ Widget itemEdit(BuildContext context, Map itemData){
         elevation: 3.0,
         backgroundColor: firmColor.withOpacity(0.7),
         heroTag: 'itemEdit',
-        onPressed: (){ context.pushNamed('selected_item_edit', extra: itemData); }, 
+        onPressed: (){ context.pushNamed('selected_item_edit', extra: itemData).then((_){ refresh(); }); }, 
         child: Icon(MdiIcons.squareEditOutline, color: Colors.white, size: 25,),
       ),
     ],

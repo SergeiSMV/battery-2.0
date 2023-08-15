@@ -11,7 +11,7 @@ abstract class SimItemsRepository{
   void filterItems(BuildContext context, List items, String filter);
 
   // FAB меню выбранной позиции
-  List<Widget> selectedItemFabMenu(Accesses? allAccesses, BuildContext context, Map itemData);
+  List<Widget> selectedItemFabMenu(Accesses? allAccesses, BuildContext context, Map itemData, Function refresh);
 
   // запрос конкретного ТМЦ со списком одинаковых ТМЦ согласно выбранному
   Future selectedItem(String itemId);
@@ -29,9 +29,19 @@ abstract class SimItemsRepository{
   Future getCategories(BuildContext context, TextEditingController categoryCntr);
 
   // Получение списка наименований по категории
-  Future getNames(BuildContext context, TextEditingController nameCntr, String category);
+  Future getNames(BuildContext context, TextEditingController nameCntr, Map itemData);
   
-  // Получение списка наименований по категории
-  Future getColors(BuildContext context, TextEditingController colorCntr, String category);
+  // Получение списка цветов
+  Future getColors(BuildContext context, TextEditingController colorCntr);
+
+  // Получение списка поставщиков по категории и наименованию
+  Future getProducers(BuildContext context, TextEditingController colorCntr, Map itemData);
+
+  // Получение списка ед. измерения по категории, наименованию и поставщику
+  Future getUnits(BuildContext context, TextEditingController colorCntr, Map itemData);
+
+  // Сохранение корректировки
+  Future saveEdit(Map dataToSave, Map defaultData);
+
 
 }

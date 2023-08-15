@@ -1,5 +1,6 @@
 
 import 'package:battery_2_0/presentation/widgets/app_text_styles.dart';
+import 'package:battery_2_0/presentation/widgets/calendar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
@@ -24,13 +25,13 @@ class _SelectedItemEditState extends State<SelectedItemEdit> {
   late SimItems item;
   late Map dataToSave;
 
-  TextEditingController categoryCntr = TextEditingController(text: '');
+  TextEditingController categoryCntr = TextEditingController();
   TextEditingController nameCntr = TextEditingController();
   TextEditingController colorCntr = TextEditingController();
   TextEditingController producerCntr = TextEditingController();
   TextEditingController unitCntr = TextEditingController();
   TextEditingController quantityCntr = TextEditingController();
-  TextEditingController fifoCntr = TextEditingController();
+  TextEditingController dateCntr = TextEditingController();
 
   @override
   void initState(){
@@ -42,8 +43,20 @@ class _SelectedItemEditState extends State<SelectedItemEdit> {
     producerCntr.text = dataToSave['producer'];
     unitCntr.text = dataToSave['unit'];
     quantityCntr.text = dataToSave['quantity'].toString();
-    fifoCntr.text = dataToSave['fifo'];
+    dateCntr.text = dataToSave['fifo'];
     super.initState();
+  }
+
+  @override
+  void dispose(){
+    categoryCntr.dispose();
+    nameCntr.dispose();
+    colorCntr.dispose();
+    producerCntr.dispose();
+    unitCntr.dispose();
+    quantityCntr.dispose();
+    dateCntr.dispose();
+    super.dispose();
   }
 
 
@@ -53,6 +66,7 @@ class _SelectedItemEditState extends State<SelectedItemEdit> {
   Widget build(BuildContext context) {
 
     bool compire = mapEquals(widget.itemData, dataToSave);
+
     final messenger = ScaffoldMessenger.of(context);
 
     return Scaffold(
@@ -103,43 +117,109 @@ class _SelectedItemEditState extends State<SelectedItemEdit> {
                         ProgressHUD.of(context)?.showWithText('загрузка');
                         await SimItemsImpl().getCategories(context, categoryCntr).then((value) {
                           ProgressHUD.of(context)?.dismiss();
-                          value is List ? setState((){ 
-                            categoryCntr.text.isEmpty || categoryCntr.text == dataToSave['category'] ? null : {
-                              dataToSave['category'] = categoryCntr.text,
-                              nameCntr.clear(), colorCntr.clear(), producerCntr.clear(), unitCntr.clear()
-                            };
-                          }) : messenger.toast(value);
+                          value is List ? 
+                            setState((){ 
+                              categoryCntr.text.isEmpty || categoryCntr.text == dataToSave['category'] ? null : {
+                                dataToSave['category'] = categoryCntr.text,
+                                nameCntr.clear(), colorCntr.clear(), producerCntr.clear(), unitCntr.clear()
+                              };
+                            }) : messenger.toast(value);
                         });
                       }),
+
                       const SizedBox(height: 8),
                       _enterValue('наименование', TextInputType.text, nameCntr, true, () async {
                         categoryCntr.text.isEmpty ? messenger.toast('укажите категорию') :
                         {
                           ProgressHUD.of(context)?.showWithText('загрузка'),
-                          await SimItemsImpl().getNames(context, nameCntr, categoryCntr.text).then((value) {
+                          await SimItemsImpl().getNames(context, nameCntr, dataToSave).then((value) {
                             ProgressHUD.of(context)?.dismiss();
-                            value is List ? setState((){ 
-                              nameCntr.text.isEmpty ? null : {
-                                dataToSave['name'] = nameCntr.text,
-                                colorCntr.clear(), producerCntr.clear()
-                              };
-                            }) : messenger.toast(value);
+                            value is List ? 
+                              setState((){ 
+                                nameCntr.text.isEmpty || nameCntr.text == dataToSave['name'] ?  null : {
+                                  dataToSave['name'] = nameCntr.text,
+                                  colorCntr.clear(), producerCntr.clear(), unitCntr.clear()
+                                };
+                              }) : messenger.toast(value);
                           })
                         };
                       }),
+
                       const SizedBox(height: 8),
-                      _enterValue('цвет', TextInputType.text, colorCntr, true, (){}),
+                      _enterValue('цвет', TextInputType.text, colorCntr, true, () async { 
+                        categoryCntr.text.isEmpty || nameCntr.text.isEmpty ? messenger.toast('укажите категорию и наименование') : 
+                        {
+                          ProgressHUD.of(context)?.showWithText('загрузка'),
+                          await SimItemsImpl().getColors(context, colorCntr).then((value) {
+                            ProgressHUD.of(context)?.dismiss();
+                            value is List ? 
+                              setState((){ 
+                                colorCntr.text.isEmpty || colorCntr.text == dataToSave['name'] ?  null : {
+                                  dataToSave['color'] = colorCntr.text,
+                                };
+                              }) : messenger.toast(value);
+                          })
+                        };
+                      }),
+
                       const SizedBox(height: 8),
-                      _enterValue('поставщик', TextInputType.text, producerCntr, true, (){}),
+                      _enterValue('поставщик', TextInputType.text, producerCntr, true, () async {
+                        categoryCntr.text.isEmpty || nameCntr.text.isEmpty ? messenger.toast('укажите категорию и наименование') : 
+                        {
+                          ProgressHUD.of(context)?.showWithText('загрузка'),
+                          await SimItemsImpl().getProducers(context, producerCntr, dataToSave).then((value) {
+                            ProgressHUD.of(context)?.dismiss();
+                            value is List ? 
+                              setState((){ 
+                                producerCntr.text.isEmpty || producerCntr.text == dataToSave['producer'] ?  null : {
+                                  dataToSave['producer'] = producerCntr.text,
+                                };
+                              }) : messenger.toast(value);
+                          })
+                        };
+                      }),
+
                       const SizedBox(height: 8),
-                      _enterValue('ед.изм.', TextInputType.text, unitCntr, true, (){}),
+                      _enterValue('ед.изм.', TextInputType.text, unitCntr, true, () async {
+                        categoryCntr.text.isEmpty || nameCntr.text.isEmpty || producerCntr.text.isEmpty ? 
+                        messenger.toast('укажите категорию, наименование и поставщика') : {
+                          ProgressHUD.of(context)?.showWithText('загрузка'),
+                          await SimItemsImpl().getUnits(context, unitCntr, dataToSave).then((value) {
+                            ProgressHUD.of(context)?.dismiss();
+                            value is List ? 
+                              setState((){ 
+                                unitCntr.text.isEmpty || unitCntr.text == dataToSave['unit'] ?  null : {
+                                  dataToSave['unit'] = unitCntr.text,
+                                };
+                              }) : messenger.toast(value);
+                          })
+                        };
+                      }),
+
                       const SizedBox(height: 8),
-                      _enterValue('количество', TextInputType.number, quantityCntr, false, (){}),
+                      _enterValue('количество', TextInputType.number, quantityCntr, false, (){}, (String value){
+                        value.isEmpty || int.tryParse(value) == dataToSave['quantity'] ? null :
+                        setState((){
+                          dataToSave['quantity'] = int.tryParse(value);
+                        });
+                      }),
+                      
                       const SizedBox(height: 8),
-                      _enterValue('дата поступления', TextInputType.text, fifoCntr, true, (){}),
+                      _enterValue('дата поступления', TextInputType.text, dateCntr, true, () async {
+                        ProgressHUD.of(context)?.showWithText('загрузка');
+                        await calendar(context, dateCntr).then((_) {
+                          ProgressHUD.of(context)?.dismiss();
+                          dateCntr.text.isEmpty || dateCntr.text == dataToSave['fifo'] ?  null :
+                          setState((){ 
+                              dataToSave['fifo'] = dateCntr.text;
+                          });
+                        });
+                      }),
                       const SizedBox(height: 12),
 
-                      categoryCntr.text.isEmpty || nameCntr.text.isEmpty || !compire ? 
+
+                      categoryCntr.text.isEmpty || nameCntr.text.isEmpty || producerCntr.text.isEmpty || unitCntr.text.isEmpty
+                      || compire || quantityCntr.text.isEmpty ? const SizedBox.shrink() :
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: const BorderRadius.all(Radius.circular(5.0)),
@@ -147,10 +227,15 @@ class _SelectedItemEditState extends State<SelectedItemEdit> {
                         ),
                         height: 40,
                         width: MediaQuery.of(context).size.width * 0.875,
-                        child: TextButton(onPressed: () {
+                        child: TextButton(onPressed: () async {
                           ProgressHUD.of(context)?.showWithText('вносим изменения');
+                          await SimItemsImpl().saveEdit(dataToSave, Map.from(widget.itemData)).then((value) {
+                            ProgressHUD.of(context)?.dismiss();
+                            value == 'done' ? messenger.toast('изменения сохранены') : messenger.toast(value);
+                            Navigator.pop(context);
+                          });
                         }, child: Text('сохранить', style: firm14,))
-                      ) : const SizedBox.shrink(),
+                      ),
                       const SizedBox(height: 8),
                     ],
                   ),
@@ -163,7 +248,7 @@ class _SelectedItemEditState extends State<SelectedItemEdit> {
     );
   }
 
-  _enterValue(String leading, TextInputType type, TextEditingController controller, bool readOnly, Function func){
+  _enterValue(String leading, TextInputType type, TextEditingController controller, bool readOnly, Function func, [Function? onChange]){
     return Padding(
       padding: const EdgeInsets.only(left: 0, right: 20),
       child: Container(
@@ -183,9 +268,8 @@ class _SelectedItemEditState extends State<SelectedItemEdit> {
                   decoration: const InputDecoration(
                     enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
                     focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
-                    // hintStyle: firm14,
-                    // hintText: hint,
                   ),
+                  onChanged: (value){ onChange!(value); },
                   onTap: (){ func(); },
                 ),
               ),

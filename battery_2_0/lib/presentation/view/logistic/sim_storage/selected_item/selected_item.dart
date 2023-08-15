@@ -51,9 +51,11 @@ class _SelectedItem extends ConsumerState <SelectedItem> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
 
+
+
     final itemPack = ref.watch(simSelectedItemProvider(widget.itemId));
+
     final allUserAccesses = ref.watch(allAccessesProvider).value;
-    
 
     return Consumer(
       builder: ((context, ref, child) {
@@ -66,7 +68,7 @@ class _SelectedItem extends ConsumerState <SelectedItem> with SingleTickerProvid
             SimItems item = SimItems(item: data['selected_item']);
             int totalQuantity = data['total_quantity'];
 
-            List<Widget> itemMenu = SimItemsImpl().selectedItemFabMenu(allUserAccesses!, widget.simCatalogContext, Map.from(data['selected_item']));
+            List<Widget> itemMenu = SimItemsImpl().selectedItemFabMenu(allUserAccesses!, widget.simCatalogContext, Map.from(data['selected_item']), refresh);
     
             return Scaffold(
               appBar: AppBar(
@@ -222,6 +224,10 @@ class _SelectedItem extends ConsumerState <SelectedItem> with SingleTickerProvid
         );
       })
     );
+  }
+
+  void refresh(){
+    ref.invalidate(simSelectedItemProvider(widget.itemId));
   }
 }
 

@@ -7,8 +7,8 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../domain/models/departments/departments.dart';
 import '../../domain/models/user/user.dart';
-import '../../domain/repository/server_routers/server_data.dart';
-import '../../domain/repository/server_routers/users.dart';
+import '../../domain/repository/server/server_data.dart';
+import '../../domain/repository/server/users.dart';
 
 class UserImpl extends UserRepository{
 

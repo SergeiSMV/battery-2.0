@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import '../../../domain/models/accesses/accesses.dart';
 import '../../../domain/models/user/user.dart';
-import '../../../domain/repository/server_routers/server_data.dart';
-import '../../../domain/repository/server_routers/users.dart';
+import '../../../domain/repository/server/server_data.dart';
+import '../../../domain/repository/server/users.dart';
 import '../../user/device_impl.dart';
 import '../../user/user_impl.dart';
 

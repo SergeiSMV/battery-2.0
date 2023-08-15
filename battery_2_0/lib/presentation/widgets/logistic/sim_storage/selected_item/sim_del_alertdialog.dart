@@ -12,8 +12,6 @@ simDeleteAlertDialog(BuildContext simCatalogContext, Map itemData){
     context: simCatalogContext,
     builder: (context) {
 
-      print('itemData: $itemData');
-
       return AlertDialog(
         backgroundColor: Colors.white,
         content: Column(

@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:battery_2_0/domain/repository/users/users_repo.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-import '../../domain/repository/server_routers/server_data.dart';
-import '../../domain/repository/server_routers/users.dart';
+import '../../domain/repository/server/server_data.dart';
+import '../../domain/repository/server/users.dart';
 
 class UsersImpl extends UsersRepository {
   
