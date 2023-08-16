@@ -178,7 +178,7 @@ class _SimCatalogState extends ConsumerState<SimCatalog> {
                         ),
             
             
-                        // контейнер выбора ТМЦ
+                        // контейнер выбора ТМЦ на печать
                         AnimatedContainer(
                           decoration: BoxDecoration(
                             color: Colors.blue.shade50,

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../../../../data/departments/logistic/sim_items_impl.dart';
+import '../../../../../data/providers/logistic/sim/sim_items_provider.dart';
 import '../../../../../data/providers/logistic/sim/sim_selected_item_provider.dart';
 import '../../../../../data/providers/user/user_accesses_provider.dart';
 import '../../../../../domain/models/departments/logistic/sim_items/sim_items.dart';
@@ -54,7 +55,7 @@ class _SelectedItem extends ConsumerState <SelectedItem> with SingleTickerProvid
 
 
     final itemPack = ref.watch(simSelectedItemProvider(widget.itemId));
-
+    final allSimItems = ref.watch(simItemsProvider).value;
     final allUserAccesses = ref.watch(allAccessesProvider).value;
 
     return Consumer(
@@ -68,7 +69,9 @@ class _SelectedItem extends ConsumerState <SelectedItem> with SingleTickerProvid
             SimItems item = SimItems(item: data['selected_item']);
             int totalQuantity = data['total_quantity'];
 
-            List<Widget> itemMenu = SimItemsImpl().selectedItemFabMenu(allUserAccesses!, widget.simCatalogContext, Map.from(data['selected_item']), refresh);
+            List<Widget> itemMenu = SimItemsImpl().selectedItemFabMenu(
+              allUserAccesses!, widget.simCatalogContext, Map.from(data['selected_item']), refresh, allSimItems!
+            );
     
             return Scaffold(
               appBar: AppBar(

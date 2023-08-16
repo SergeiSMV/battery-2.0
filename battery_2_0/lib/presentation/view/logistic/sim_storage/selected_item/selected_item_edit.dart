@@ -76,7 +76,7 @@ class _SelectedItemEditState extends State<SelectedItemEdit> {
           onPressed: () { Navigator.pop(context); },
           icon: Icon(Icons.keyboard_arrow_left, color: firmColor, size: 25,),
         ),
-        backgroundColor: Colors.green.shade50,
+        backgroundColor: Colors.green.shade100,
         title: Text('редактирование', style: firm14,),
       ),
       body: ProgressHUD(

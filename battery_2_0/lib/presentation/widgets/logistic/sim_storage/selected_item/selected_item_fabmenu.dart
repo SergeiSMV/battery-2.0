@@ -3,9 +3,10 @@
 import 'package:battery_2_0/presentation/widgets/app_text_styles.dart';
 import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import '../../../../view/logistic/sim_storage/selected_item/selected_item_edit.dart';
+import '../../../../view/logistic/sim_storage/selected_item/selected_item_replace.dart';
 import '../../../app_colors.dart';
 import 'sim_del_alertdialog.dart';
 
@@ -51,7 +52,9 @@ Widget itemEdit(BuildContext context, Map itemData, Function refresh){
         elevation: 3.0,
         backgroundColor: firmColor.withOpacity(0.7),
         heroTag: 'itemEdit',
-        onPressed: (){ context.pushNamed('selected_item_edit', extra: itemData).then((_){ refresh(); }); }, 
+        onPressed: (){ Navigator.push(context, MaterialPageRoute(
+          builder: (context) => SelectedItemEdit(itemData: itemData,))
+        ).then((_){ refresh(); }); }, 
         child: Icon(MdiIcons.squareEditOutline, color: Colors.white, size: 25,),
       ),
     ],
@@ -60,7 +63,7 @@ Widget itemEdit(BuildContext context, Map itemData, Function refresh){
 
 
 // перемещение позиции
-Widget itemMoving(){
+Widget itemMoving(BuildContext context, Map itemData, Function refresh, List allItems){
   return Row(
     children: [
       Bubble(
@@ -76,7 +79,9 @@ Widget itemMoving(){
         elevation: 3.0,
         backgroundColor: firmColor.withOpacity(0.7),
         heroTag: 'itemMoving',
-        onPressed: (){ print('TAP the itemMoving'); },
+        onPressed: (){ Navigator.push(context, MaterialPageRoute(
+          builder: (context) => SelectedItemReplace(itemData: itemData, allItems: allItems,))
+        ).then((_){ refresh(); }); },
         child: Icon(MdiIcons.arrowDecision, color: Colors.white, size: 25,),
       ),
     ],

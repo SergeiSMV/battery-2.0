@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import '../../../domain/repository/departments/accesses_names.dart';
 import '../../../domain/repository/server/sim.dart';
 import '../../../presentation/widgets/logistic/sim_storage/selected_item/selected_item_fabmenu.dart';
+import '../../../presentation/widgets/logistic/sim_storage/selected_item/set_item_cell.dart';
 import '../../../presentation/widgets/logistic/sim_storage/selected_item/set_item_element.dart';
 import '../../server/connect_impl.dart';
 
@@ -81,7 +82,7 @@ class SimItemsImpl extends SimItemsRepository{
 
   // FAB меню выбранной позиции
   @override
-  List<Widget> selectedItemFabMenu(Accesses? allAccesses, BuildContext context, Map itemData, Function refresh) {
+  List<Widget> selectedItemFabMenu(Accesses? allAccesses, BuildContext context, Map itemData, Function refresh, List allItems) {
     const String dependence = 'склад сырья и материалов';
     List<Widget> itemMenu = [const SizedBox.shrink()];
 
@@ -91,7 +92,7 @@ class SimItemsImpl extends SimItemsRepository{
     
     for (var dp in allAccesses.accessesList) {
       dp['depence'] == dependence && dp['chapter'] == simEdit ? itemMenu.add(itemEdit(context, itemData, refresh)) : null;
-      dp['depence'] == dependence && dp['chapter'] == simMoving ? itemMenu.add(itemMoving()) : null;
+      dp['depence'] == dependence && dp['chapter'] == simMoving ? itemMenu.add(itemMoving(context, itemData, refresh, allItems)) : null;
       dp['depence'] == dependence && dp['chapter'] == simStatus ? itemMenu.add(itemStatus()) : null;
       dp['depence'] == dependence && dp['chapter'] == simAddPhoto ? itemMenu.add(itemAddPhoto()) : null;
       dp['depence'] == dependence && dp['chapter'] == simHistory ? itemMenu.add(itemHistory()) : null;
@@ -184,11 +185,66 @@ class SimItemsImpl extends SimItemsRepository{
     });
     return requestResult;
   }
+  
+  // Получение списка складов
+  @override
+  Future getPlaces(BuildContext context, TextEditingController placeController) async {
+    dynamic requestResult;
+    await ConnectionImpl().request(simGetPlaces, {}).then((value) async {
+      value is List ? await setItemElement(context, 'выберите склад', value, placeController) : null;
+      requestResult = value;
+    });
+    return requestResult;
+  }
+
+  // Получение списка ячеек
+  @override
+  Future getCells(BuildContext context, TextEditingController placeController, String place) async {
+    dynamic requestResult;
+    await ConnectionImpl().request(simGetCells, {'place': place}).then((value) async {
+      value is List ? await setItemCell(context, placeController, value) : null;
+      requestResult = value;
+    });
+    return requestResult;
+  }
+
+
+  // Проверка занятости выбранной ячейки
+  @override
+  List checkCell(List allItems, String place, String cell, String itemId){
+    List roommates = [];
+    for (var r in allItems){
+      if(r['place'] == place && r['cell'] == cell && r['itemId'] != itemId){
+        roommates.add(r);
+      }
+    }
+    return roommates;
+  }
 
 
 
-
-
+  // перемещение ТМЦ
+  @override
+  Future<String> replace(Map locatesData, Map defaultData) async {
+    Map replaceData = {};
+    final userInfo = GetStorage().read('info');
+    String author = '${userInfo['surname']} ${userInfo['name'][0]}.${userInfo['patronymic'][0]}.';
+    replaceData['itemId'] = defaultData['itemId'];
+    replaceData['new_place'] = locatesData['place'];
+    replaceData['new_cell'] = locatesData['cell'];
+    replaceData['old_place'] = defaultData['place'];
+    replaceData['old_cell'] = defaultData['cell'];
+    replaceData['author'] = author;
+    replaceData['pallet_size'] = defaultData['pallet_size'];
+    replaceData['change_pallet'] = locatesData['change_pallet'] ? 'yes' : 'no';
+    late String requestResult;
+    
+    await ConnectionImpl().request(simItemReplace, replaceData).then((value) async {
+      requestResult = value.toString();
+    });
+    return requestResult;
+  }
+  
   
 
 }

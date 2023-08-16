@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../data/user/device_impl.dart';
 import '../view/logistic/logistic.dart';
 import '../view/logistic/sim_storage/selected_item/selected_item.dart';
-import '../view/logistic/sim_storage/selected_item/selected_item_edit.dart';
 import '../view/logistic/sim_storage/sim_catalog.dart';
 import '../view/logistic/sim_storage/sim_storage.dart';
 import '../view/users/all_users.dart';
@@ -69,13 +68,6 @@ final router = GoRouter(
                   builder: ((context, state) => SelectedItem(
                     itemId: '${state.pathParameters['itemId']}',
                     simCatalogContext: state.extra as BuildContext
-                  )),
-                ),
-                GoRoute(
-                  path: 'selected_item_edit',
-                  name: 'selected_item_edit',
-                  builder: ((context, state) => SelectedItemEdit(
-                    itemData: state.extra as Map,
                   )),
                 ),
               ]
