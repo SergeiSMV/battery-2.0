@@ -7,6 +7,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 import '../../../../view/logistic/sim_storage/selected_item/selected_item_edit.dart';
 import '../../../../view/logistic/sim_storage/selected_item/selected_item_replace.dart';
+import '../../../../view/logistic/sim_storage/selected_item/selected_item_replace_prv.dart';
 import '../../../app_colors.dart';
 import 'sim_del_alertdialog.dart';
 
@@ -79,8 +80,11 @@ Widget itemMoving(BuildContext context, Map itemData, Function refresh, List all
         elevation: 3.0,
         backgroundColor: firmColor.withOpacity(0.7),
         heroTag: 'itemMoving',
+        // onPressed: (){ Navigator.push(context, MaterialPageRoute(
+        //   builder: (context) => SelectedItemReplace(itemData: itemData, allItems: allItems,))
+        // ).then((_){ refresh(); }); },
         onPressed: (){ Navigator.push(context, MaterialPageRoute(
-          builder: (context) => SelectedItemReplace(itemData: itemData, allItems: allItems,))
+          builder: (context) => SelectedItemReplacePrv(itemData: itemData, allItems: allItems,))
         ).then((_){ refresh(); }); },
         child: Icon(MdiIcons.arrowDecision, color: Colors.white, size: 25,),
       ),

@@ -65,7 +65,8 @@ class _SelectedItem extends ConsumerState <SelectedItem> with SingleTickerProvid
           error: (error, _) => Text(error.toString()), 
           data: (data) {
 
-            
+            // ref.read(compireProvider.notifier).init(data['selected_item']);
+
             SimItems item = SimItems(item: data['selected_item']);
             int totalQuantity = data['total_quantity'];
 

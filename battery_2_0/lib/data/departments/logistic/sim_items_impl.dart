@@ -9,8 +9,9 @@ import 'package:intl/intl.dart';
 import '../../../domain/repository/departments/accesses_names.dart';
 import '../../../domain/repository/server/sim.dart';
 import '../../../presentation/widgets/logistic/sim_storage/selected_item/selected_item_fabmenu.dart';
-import '../../../presentation/widgets/logistic/sim_storage/selected_item/set_item_cell.dart';
+import '../../../presentation/widgets/logistic/sim_storage/selected_item/replace/sim_get_cell_dialog.dart';
 import '../../../presentation/widgets/logistic/sim_storage/selected_item/set_item_element.dart';
+import '../../../presentation/widgets/logistic/sim_storage/selected_item/replace/sim_get_place_dialog.dart';
 import '../../server/connect_impl.dart';
 
 class SimItemsImpl extends SimItemsRepository{
@@ -188,21 +189,23 @@ class SimItemsImpl extends SimItemsRepository{
   
   // Получение списка складов
   @override
-  Future getPlaces(BuildContext context, TextEditingController placeController) async {
-    dynamic requestResult;
+  Future getPlaces(BuildContext context) async {
+    dynamic responce;
     await ConnectionImpl().request(simGetPlaces, {}).then((value) async {
-      value is List ? await setItemElement(context, 'выберите склад', value, placeController) : null;
-      requestResult = value;
+      value is List ? await simGetPlaceDialog(context, 'выберите склад', value) : null;
+      responce = value;
     });
-    return requestResult;
+    return responce;
   }
+
+
 
   // Получение списка ячеек
   @override
-  Future getCells(BuildContext context, TextEditingController placeController, String place) async {
+  Future getCells(BuildContext context, String place) async {
     dynamic requestResult;
     await ConnectionImpl().request(simGetCells, {'place': place}).then((value) async {
-      value is List ? await setItemCell(context, placeController, value) : null;
+      value is List ? await simGetCellDialog(context, value) : null;
       requestResult = value;
     });
     return requestResult;
@@ -244,6 +247,8 @@ class SimItemsImpl extends SimItemsRepository{
     });
     return requestResult;
   }
+  
+  
   
   
 

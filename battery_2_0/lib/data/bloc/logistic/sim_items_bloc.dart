@@ -1,18 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
 
 
 class SimItemsBloc extends Bloc<SimAllItemsEvent, List> {
-  late WebSocketChannel itemsChannel;
   late List currentState;
   SimItemsBloc() : super([]) {
     on<InitSimItemsEvent>(_onInitValueEvent);
     on<UpdateSimItemsEvent>(_onUpdateState);
     on<SimStorageSearchEvent>(_onSearch);
     on<SimStorageClearSearchEvent>(_onClearSearch);
-    // on<UpdateStateEvent>(_onUpdateCurrentState);
   }
 
   _onInitValueEvent(InitSimItemsEvent event, Emitter<List> emit) async {
@@ -44,11 +41,6 @@ class SimItemsBloc extends Bloc<SimAllItemsEvent, List> {
   _onClearSearch(SimStorageClearSearchEvent event, Emitter<List> emit){
     emit(currentState);
   }
-
-  // _onUpdateCurrentState(UpdateStateEvent event, Emitter<List> emit){
-  //   currentState = event.data;
-  //   emit(currentState);
-  // }
 
 }
 

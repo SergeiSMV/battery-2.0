@@ -44,10 +44,10 @@ abstract class SimItemsRepository{
   Future saveEdit(Map dataToSave, Map defaultData);
 
   // Получение списка складов
-  Future getPlaces(BuildContext context, TextEditingController placeController);
+  Future getPlaces(BuildContext context);
 
   // Получение списка ячеек
-  Future getCells(BuildContext context, TextEditingController placeController, String place);
+  Future getCells(BuildContext context, String place);
 
   // Проверка занятости выбранной ячейки
   List checkCell(List allItems, String place, String cell, String itemId);

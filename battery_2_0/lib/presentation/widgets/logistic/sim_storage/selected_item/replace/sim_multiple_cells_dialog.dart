@@ -4,11 +4,11 @@
 import 'package:battery_2_0/presentation/widgets/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../../domain/models/departments/logistic/sim_items/sim_items.dart';
-import '../../../app_colors.dart';
+import '../../../../../../domain/models/departments/logistic/sim_items/sim_items.dart';
+import '../../../../app_colors.dart';
 
 
-simToMultipleCells(BuildContext context, List checkCell, TextEditingController cellController, TextEditingController mergeController){
+simMultipleCellsDialog(BuildContext context, List checkCell){
   return showModalBottomSheet(
     enableDrag: false,
     isDismissible: false,
@@ -79,7 +79,7 @@ simToMultipleCells(BuildContext context, List checkCell, TextEditingController c
                     height: 35,
                     width: MediaQuery.of(context).size.width * 0.875,
                     child: TextButton(onPressed: () {
-                      mergeController.text = 'merge';
+                      // mergeController.text = 'merge';
                       Navigator.pop(context);
                     }, child: Text('объединить', style: white16,))
                   ),
@@ -92,7 +92,7 @@ simToMultipleCells(BuildContext context, List checkCell, TextEditingController c
                     height: 35,
                     width: MediaQuery.of(context).size.width * 0.875,
                     child: TextButton(onPressed: () {
-                      cellController.clear();
+                      // cellController.clear();
                       Navigator.pop(context);
                     }, child: Text('выбрать другую ячейку', style: white16,))
                   ),

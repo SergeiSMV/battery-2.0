@@ -1,16 +1,18 @@
 import 'package:battery_2_0/presentation/widgets/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../app_colors.dart';
+import '../../../../../../data/bloc/logistic/sim_item_replace_bloc.dart';
+import '../../../../app_colors.dart';
 
 
 String funcDescription = 'Выберите ячейку или зону, где будет хранится ТМЦ, из доступных ниже';
 
-setItemCell(BuildContext parrentContext, TextEditingController cellController, List cells) {
+simGetCellDialog(BuildContext motherContext, List cells) {
   return showModalBottomSheet(
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    context: parrentContext,
+    context: motherContext,
     builder: (context) {
       
       final List markers = [];
@@ -23,6 +25,8 @@ setItemCell(BuildContext parrentContext, TextEditingController cellController, L
             List marker = ch.split('-');
             marker.length > 2 ? markers.contains(marker[0]) ? null : markers.add(marker[0]) : markers.add(ch);
           }
+
+          Map replaceState = motherContext.read<SimItemReplaceBloc>().state;
 
           return Container(
             width: MediaQuery.of(context).size.width,
@@ -64,7 +68,9 @@ setItemCell(BuildContext parrentContext, TextEditingController cellController, L
                                     visualDensity: const VisualDensity(vertical: -4),
                                     title: Text(cellsDisplay[index], textAlign: TextAlign.center, style: TextStyle(color: firmColor, fontSize: 12)),
                                     onTap: () {
-                                      cellController.text = cellsDisplay[index].toString();
+                                      // cellController.text = cellsDisplay[index].toString();
+                                      replaceState['replace']['cell'] == cellsDisplay[index] ? null : replaceState['replace']['cell'] = cellsDisplay[index];
+                                      motherContext.read<SimItemReplaceBloc>().add(ReplaceEvent(replaceData: replaceState['replace']));
                                       Navigator.pop(context);
                                     },
                                   ),
@@ -109,7 +115,9 @@ setItemCell(BuildContext parrentContext, TextEditingController cellController, L
                                       setState(() { cellsDisplay = cells.where((cell) => cell.contains(markers[index])).toList(); }) 
                                       : 
                                       {
-                                        cellController.text = markers[index].toString(),
+                                        // cellController.text = markers[index].toString(),
+                                        replaceState['replace']['cell'] = markers[index],
+                                        motherContext.read<SimItemReplaceBloc>().add(ReplaceEvent(replaceData: replaceState['replace'])),
                                         Navigator.pop(context)
                                       };
                                     },
