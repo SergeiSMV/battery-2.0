@@ -68,9 +68,12 @@ simGetCellDialog(BuildContext motherContext, List cells) {
                                     visualDensity: const VisualDensity(vertical: -4),
                                     title: Text(cellsDisplay[index], textAlign: TextAlign.center, style: TextStyle(color: firmColor, fontSize: 12)),
                                     onTap: () {
-                                      // cellController.text = cellsDisplay[index].toString();
-                                      replaceState['replace']['cell'] == cellsDisplay[index] ? null : replaceState['replace']['cell'] = cellsDisplay[index];
-                                      motherContext.read<SimItemReplaceBloc>().add(ReplaceEvent(replaceData: replaceState['replace']));
+                                      replaceState['replace']['cell'] == cellsDisplay[index] ? null : 
+                                      {
+                                        replaceState['replace']['cell'] = cellsDisplay[index],
+                                        replaceState['replace']['pallet_size'] = replaceState['default']['pallet_size'],
+                                        motherContext.read<SimItemReplaceBloc>().add(UpdateReplaceValueEvent(updateData: replaceState))
+                                      };
                                       Navigator.pop(context);
                                     },
                                   ),
@@ -115,9 +118,9 @@ simGetCellDialog(BuildContext motherContext, List cells) {
                                       setState(() { cellsDisplay = cells.where((cell) => cell.contains(markers[index])).toList(); }) 
                                       : 
                                       {
-                                        // cellController.text = markers[index].toString(),
+
                                         replaceState['replace']['cell'] = markers[index],
-                                        motherContext.read<SimItemReplaceBloc>().add(ReplaceEvent(replaceData: replaceState['replace'])),
+                                        motherContext.read<SimItemReplaceBloc>().add(UpdateReplaceValueEvent(updateData: replaceState)),
                                         Navigator.pop(context)
                                       };
                                     },

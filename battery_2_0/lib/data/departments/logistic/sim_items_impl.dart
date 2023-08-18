@@ -198,8 +198,6 @@ class SimItemsImpl extends SimItemsRepository{
     return responce;
   }
 
-
-
   // Получение списка ячеек
   @override
   Future getCells(BuildContext context, String place) async {
@@ -210,7 +208,6 @@ class SimItemsImpl extends SimItemsRepository{
     });
     return requestResult;
   }
-
 
   // Проверка занятости выбранной ячейки
   @override
@@ -223,8 +220,6 @@ class SimItemsImpl extends SimItemsRepository{
     }
     return roommates;
   }
-
-
 
   // перемещение ТМЦ
   @override
@@ -247,9 +242,4 @@ class SimItemsImpl extends SimItemsRepository{
     });
     return requestResult;
   }
-  
-  
-  
-  
-
 }

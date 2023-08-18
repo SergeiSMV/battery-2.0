@@ -52,7 +52,7 @@ simGetPlaceDialog(BuildContext motherContext, String title, List categories){
                               replaceState['replace']['place'] = categories[index],
                               replaceState['replace']['cell'] = ''
                             };
-                          motherContext.read<SimItemReplaceBloc>().add(ReplaceEvent(replaceData: replaceState['replace']));
+                          motherContext.read<SimItemReplaceBloc>().add(UpdateReplaceValueEvent(updateData: replaceState));
                           Navigator.pop(context);
                         },
                       ),

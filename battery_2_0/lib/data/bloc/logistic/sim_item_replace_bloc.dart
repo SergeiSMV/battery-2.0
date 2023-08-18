@@ -4,42 +4,20 @@ import 'package:equatable/equatable.dart';
 
 
 class SimItemReplaceBloc extends Bloc<SimAllItemsEvent, Map> {
-  SimItemReplaceBloc() : super({'default': {}, 'replace': {}, 'merge': 'no', 'merge_items': [], 'change_pallet': 'no'}) {
+  SimItemReplaceBloc() : super({'default': {}, 'replace': {}, 'change_pallet': 'no', 'merge': 'no', 'merge_items': []}) {
     on<InitEvent>(_onInitReplaceValue);
-    on<ReplaceEvent>(_onSetReplaceValue);
-    on<MergeEvent>(_onSetMergeValue);
-    on<MergeItemsEvent>(_onSetMergeItemsValue);
-    on<ChangePalletEvent>(_onSetChangePalletValue);
+    on<UpdateReplaceValueEvent>(_onUpdateReplaceValue);
   }
 
   _onInitReplaceValue(InitEvent event, Emitter<Map> emit) async {
-    state['default'] = event.initData;
-    state['replace'] = event.initData;
+    state['default'] = Map.from(event.initData);
+    state['replace'] = Map.from(event.initData);
     emit(Map.from(state));
   }
 
-  _onSetReplaceValue(ReplaceEvent event, Emitter<Map> emit) async {
-    state['replace'] = event.replaceData;
-    emit(Map.from(state));
+  _onUpdateReplaceValue(UpdateReplaceValueEvent event, Emitter<Map> emit) async {
+    emit(Map.from(event.updateData));
   }
-
-  _onSetMergeValue(MergeEvent event, Emitter<Map> emit){
-    state['merge'] = event.data;
-    emit(Map.from(state));
-  }
-
-
-  _onSetMergeItemsValue(MergeItemsEvent event, Emitter<Map> emit) async {
-    state['merge_items'] = event.mergeItems;
-    emit(Map.from(state));
-  }
-
-    _onSetChangePalletValue(ChangePalletEvent event, Emitter<Map> emit) async {
-    state['change_pallet'] = event.data;
-    emit(Map.from(state));
-  }
-
-
 }
 
 
@@ -56,24 +34,9 @@ class InitEvent extends SimAllItemsEvent{
   const InitEvent({required this.initData});
 }
 
-class MergeEvent extends SimAllItemsEvent{
-  final String data;
-  const MergeEvent({required this.data});
-}
-
-class ReplaceEvent extends SimAllItemsEvent{
-  final Map replaceData;
-  const ReplaceEvent({required this.replaceData});
-}
-
-class MergeItemsEvent extends SimAllItemsEvent{
-  final List mergeItems;
-  const MergeItemsEvent({required this.mergeItems});
-}
-
-class ChangePalletEvent extends SimAllItemsEvent{
-  final String data;
-  const ChangePalletEvent({required this.data});
+class UpdateReplaceValueEvent extends SimAllItemsEvent{
+  final Map updateData;
+  const UpdateReplaceValueEvent({required this.updateData});
 }
 
 
