@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../../../view/logistic/sim_storage/selected_item/selected_item_edit.dart';
+import '../../../../view/logistic/sim_storage/selected_item/selected_item_history.dart';
 import '../../../../view/logistic/sim_storage/selected_item/selected_item_replace.dart';
 import '../../../app_colors.dart';
 import 'sim_del_alertdialog.dart';
@@ -79,9 +80,6 @@ Widget itemMoving(BuildContext context, Map itemData, Function refresh, List all
         elevation: 3.0,
         backgroundColor: firmColor.withOpacity(0.7),
         heroTag: 'itemMoving',
-        // onPressed: (){ Navigator.push(context, MaterialPageRoute(
-        //   builder: (context) => SelectedItemReplace(itemData: itemData, allItems: allItems,))
-        // ).then((_){ refresh(); }); },
         onPressed: (){ Navigator.push(context, MaterialPageRoute(
           builder: (context) => SelectedItemReplace(itemData: itemData, allItems: allItems,))
         ).then((_){ refresh(); }); },
@@ -91,6 +89,32 @@ Widget itemMoving(BuildContext context, Map itemData, Function refresh, List all
   );
 }
 
+
+// история движения позиции
+Widget itemHistory(BuildContext context, String itemId, Function refresh){
+  return Row(
+    children: [
+      Bubble(
+        color: Colors.grey.shade700.withOpacity(0.9),
+        nip: BubbleNip.rightTop,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 5, right: 5, top: 1, bottom: 1),
+          child: Text('история', style: white14,),
+        ),
+      ),
+      const SizedBox(width: 5,),
+      FloatingActionButton(
+        elevation: 3.0,
+        backgroundColor: firmColor.withOpacity(0.7),
+        heroTag: 'itemHistory',
+        onPressed: (){ Navigator.push(context, MaterialPageRoute(
+          builder: (context) => SelectedItemHistory(itemId: itemId,))
+        ).then((_){ refresh(); }); },
+        child: Icon(MdiIcons.history, color: Colors.white, size: 25,),
+      ),
+    ],
+  );
+}
 
 
 // изменение статуса позиции
@@ -141,27 +165,5 @@ Widget itemAddPhoto(){
   );
 }
 
-// история движения позиции
-Widget itemHistory(){
-  return Row(
-    children: [
-      Bubble(
-        color: Colors.grey.shade700.withOpacity(0.9),
-        nip: BubbleNip.rightTop,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 5, right: 5, top: 1, bottom: 1),
-          child: Text('история', style: white14,),
-        ),
-      ),
-      const SizedBox(width: 5,),
-      FloatingActionButton(
-        elevation: 3.0,
-        backgroundColor: firmColor.withOpacity(0.7),
-        heroTag: 'itemHistory',
-        onPressed: (){ print('TAP the itemHistory'); },
-        child: Icon(MdiIcons.history, color: Colors.white, size: 25,),
-      ),
-    ],
-  );
-}
+
 

@@ -54,6 +54,7 @@ dependencies:
   animated_floating_buttons: ^0.0.2
   bubble: ^1.2.1
   table_calendar: ^3.0.9
+  grouped_list: ^5.1.2
 
 dev_dependencies:
   flutter_test:

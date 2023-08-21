@@ -40,3 +40,6 @@ String simGetCells = 'sim_get_cells';
 
 // перемещение ТМЦ
 String simItemReplace = 'sim_item_replace';
+
+// получение записей истории выбранной позиции
+String simItemHistory = 'sim_item_history';

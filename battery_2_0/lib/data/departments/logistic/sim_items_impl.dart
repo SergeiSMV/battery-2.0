@@ -86,6 +86,7 @@ class SimItemsImpl extends SimItemsRepository{
   List<Widget> selectedItemFabMenu(Accesses? allAccesses, BuildContext context, Map itemData, Function refresh, List allItems) {
     const String dependence = 'склад сырья и материалов';
     List<Widget> itemMenu = [const SizedBox.shrink()];
+    String itemId = itemData['itemId'].toString();
 
     for (var dp in allAccesses!.accessesList) {
       dp['depence'] == dependence && dp['chapter'] == simDelete ? itemMenu.add(delItem(context, itemData)) : null;
@@ -94,9 +95,9 @@ class SimItemsImpl extends SimItemsRepository{
     for (var dp in allAccesses.accessesList) {
       dp['depence'] == dependence && dp['chapter'] == simEdit ? itemMenu.add(itemEdit(context, itemData, refresh)) : null;
       dp['depence'] == dependence && dp['chapter'] == simMoving ? itemMenu.add(itemMoving(context, itemData, refresh, allItems)) : null;
+      dp['depence'] == dependence && dp['chapter'] == simHistory ? itemMenu.add(itemHistory(context, itemId, refresh)) : null;
       dp['depence'] == dependence && dp['chapter'] == simStatus ? itemMenu.add(itemStatus()) : null;
       dp['depence'] == dependence && dp['chapter'] == simAddPhoto ? itemMenu.add(itemAddPhoto()) : null;
-      dp['depence'] == dependence && dp['chapter'] == simHistory ? itemMenu.add(itemHistory()) : null;
       // dp['depence'] == dependence && dp['chapter'] == simDelPhoto ? itemMenu.add(dp['chapter']) : null;
     }
 
@@ -148,6 +149,7 @@ class SimItemsImpl extends SimItemsRepository{
     return requestResult;
   }
   
+  // Получение списка поставщиков по категории и наименованию
   @override
   Future getProducers(BuildContext context, TextEditingController colorCntr, Map itemData) async {
     String category = itemData['category'];
@@ -161,6 +163,7 @@ class SimItemsImpl extends SimItemsRepository{
     return requestResult;
   }
   
+  // Получение списка ед. измерения по категории, наименованию и поставщику
   @override
   Future getUnits(BuildContext context, TextEditingController colorCntr, Map itemData) async {
     String category = itemData['category'];
@@ -175,6 +178,7 @@ class SimItemsImpl extends SimItemsRepository{
     return requestResult;
   }
   
+  // Сохранение корректировки
   @override
   Future saveEdit(Map dataToSave, Map defaultData) async {
     final userInfo = GetStorage().read('info');
@@ -215,31 +219,35 @@ class SimItemsImpl extends SimItemsRepository{
     List roommates = [];
     for (var r in allItems){
       if(r['place'] == place && r['cell'] == cell && r['itemId'] != itemId){
+        r.remove('date');
         roommates.add(r);
       }
     }
     return roommates;
   }
 
-  // перемещение ТМЦ
+  // перемещение ТМЦ (сохранение в БД)
   @override
-  Future<String> replace(Map locatesData, Map defaultData) async {
-    Map replaceData = {};
+  Future<String> replace(Map replaceData) async {
     final userInfo = GetStorage().read('info');
     String author = '${userInfo['surname']} ${userInfo['name'][0]}.${userInfo['patronymic'][0]}.';
-    replaceData['itemId'] = defaultData['itemId'];
-    replaceData['new_place'] = locatesData['place'];
-    replaceData['new_cell'] = locatesData['cell'];
-    replaceData['old_place'] = defaultData['place'];
-    replaceData['old_cell'] = defaultData['cell'];
     replaceData['author'] = author;
-    replaceData['pallet_size'] = defaultData['pallet_size'];
-    replaceData['change_pallet'] = locatesData['change_pallet'] ? 'yes' : 'no';
     late String requestResult;
     
     await ConnectionImpl().request(simItemReplace, replaceData).then((value) async {
       requestResult = value.toString();
     });
+    return requestResult;
+  }
+  
+  // получение записей истории выбранной позиции
+  @override
+  Future getHistory(String itemId) async {
+    dynamic requestResult;
+    await ConnectionImpl().request(simItemHistory, {'itemId': itemId}).then((value) async {
+      requestResult = value;
+    });
+    print(requestResult);
     return requestResult;
   }
 }

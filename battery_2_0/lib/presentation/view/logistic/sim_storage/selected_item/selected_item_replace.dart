@@ -126,7 +126,6 @@ class SelectedItemReplace extends StatelessWidget {
                                   value ? replaceState['change_pallet'] = 'yes' : replaceState['change_pallet'] = 'no';
                                   replace.palletSize == 'big' ? replaceState['replace']['pallet_size'] = 'standart' : replaceState['replace']['pallet_size'] = 'big';
                                   context.read<SimItemReplaceBloc>().add(UpdateReplaceValueEvent(updateData: replaceState));
-                                  print(replaceState);
                                 }
                               ),
                               const SizedBox(width: 5,),
@@ -156,12 +155,11 @@ class SelectedItemReplace extends StatelessWidget {
                         width: MediaQuery.of(context).size.width * 0.875,
                         child: TextButton(onPressed: () async {
                           ProgressHUD.of(context)?.showWithText('перемещаем');
-                          print(replaceState);
-                          // await SimItemsImpl().replace(locatesData, defaultData).then((value) {
-                          //   ProgressHUD.of(context)?.dismiss();
-                          //   value == 'done' ? messenger.toast('изменения сохранены') : messenger.toast(value);
-                          //   Navigator.pop(context);
-                          // });
+                          await SimItemsImpl().replace(replaceState).then((value) {
+                            ProgressHUD.of(context)?.dismiss();
+                            value == 'done' ? messenger.toast('изменения сохранены') : messenger.toast(value);
+                            Navigator.pop(context);
+                          });
                         }, child: Text('сохранить', style: white16,))
                       ), 
                       

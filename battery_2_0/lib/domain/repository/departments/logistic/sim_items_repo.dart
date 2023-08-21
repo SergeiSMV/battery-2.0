@@ -53,6 +53,10 @@ abstract class SimItemsRepository{
   List checkCell(List allItems, String place, String cell, String itemId);
 
   // перемещение ТМЦ
-  Future<String> replace(Map locatesData, Map defaultData);
+  Future<String> replace(Map replaceData);
+
+
+  // получение записей истории выбранной позиции
+  Future getHistory(String itemId);
 
 }
