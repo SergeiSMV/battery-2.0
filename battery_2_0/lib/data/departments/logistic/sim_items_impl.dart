@@ -1,9 +1,13 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:battery_2_0/data/bloc/logistic/sim_items_bloc.dart';
 import 'package:battery_2_0/domain/models/accesses/accesses.dart';
 import 'package:battery_2_0/domain/repository/departments/logistic/sim_items_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../../../domain/repository/departments/accesses_names.dart';
@@ -96,9 +100,8 @@ class SimItemsImpl extends SimItemsRepository{
       dp['depence'] == dependence && dp['chapter'] == simEdit ? itemMenu.add(itemEdit(context, itemData, refresh)) : null;
       dp['depence'] == dependence && dp['chapter'] == simMoving ? itemMenu.add(itemMoving(context, itemData, refresh, allItems)) : null;
       dp['depence'] == dependence && dp['chapter'] == simHistory ? itemMenu.add(itemHistory(context, itemId, refresh)) : null;
-      dp['depence'] == dependence && dp['chapter'] == simStatus ? itemMenu.add(itemStatus()) : null;
-      dp['depence'] == dependence && dp['chapter'] == simAddPhoto ? itemMenu.add(itemAddPhoto()) : null;
-      // dp['depence'] == dependence && dp['chapter'] == simDelPhoto ? itemMenu.add(dp['chapter']) : null;
+      dp['depence'] == dependence && dp['chapter'] == simStatus ? itemMenu.add(itemStatus(context, itemData, refresh)) : null;
+      dp['depence'] == dependence && dp['chapter'] == simAddPhoto ? itemMenu.add(itemAddPhoto(context, itemData, refresh)) : null;
     }
 
     return itemMenu;
@@ -247,7 +250,63 @@ class SimItemsImpl extends SimItemsRepository{
     await ConnectionImpl().request(simItemHistory, {'itemId': itemId}).then((value) async {
       requestResult = value;
     });
-    print(requestResult);
+    if (requestResult is List){
+      for (var r in requestResult){
+        DateTime date = DateFormat('dd.MM.yyyy').parse(r['date']);
+        r['format_date'] = date;
+      }
+    }
     return requestResult;
   }
+  
+  // изменение статуса ТМЦ
+  @override
+  Future changeStatus(Map defaultData, Map changeData) async {
+    final userInfo = GetStorage().read('info');
+    String author = '${userInfo['surname']} ${userInfo['name'][0]}.${userInfo['patronymic'][0]}.';
+    Map requestData = {'default': defaultData, 'change': changeData, 'author': author};
+    dynamic requestResult;
+    await ConnectionImpl().request(simItemChangeStatus, requestData).then((value) async {
+      requestResult = value;
+    });
+    return requestResult;
+  }
+
+  // кнопка удаления фото
+  @override
+  bool imageDeleteButton(Accesses? allAccesses) {
+    bool deleteAccess = false;
+    const String dependence = 'склад сырья и материалов';
+    for (var dp in allAccesses!.accessesList) {
+      dp['depence'] == dependence && dp['chapter'] == simDelPhoto ? deleteAccess = true : null;
+    }
+    return deleteAccess;
+  }
+
+  // сохранение фото
+  @override
+  Future savePhoto(Map itemData, ImageSource source) async {
+    final getImage = await ImagePicker().pickImage(source: source, imageQuality: 100);
+    File image = File(getImage!.path);
+    List<int> imageBytes = image.readAsBytesSync();
+    var imageCode = base64Encode(imageBytes);
+    Map data = {'image': imageCode, 'item_data': itemData};
+    dynamic requestResult;
+    await ConnectionImpl().request(simItemSavePhoto, data).then((value) async {
+      requestResult = value;
+    });
+    return requestResult;
+  }
+
+  // удаление фото
+  @override
+  Future deletePhoto(Map itemData, String link) async {
+    Map data = {'item': itemData, 'link': link};
+    dynamic requestResult;
+    await ConnectionImpl().request(simItemDelPhoto, data).then((value) async {
+      requestResult = value;
+    });
+    return requestResult;
+  }
+
 }

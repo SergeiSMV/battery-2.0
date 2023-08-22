@@ -2,6 +2,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../models/accesses/accesses.dart';
 
@@ -58,5 +59,17 @@ abstract class SimItemsRepository{
 
   // получение записей истории выбранной позиции
   Future getHistory(String itemId);
+
+  // изменение статуса ТМЦ
+  Future changeStatus(Map defaultData, Map changeData);
+
+  // кнопка удаления фото
+  bool imageDeleteButton(Accesses? allAccesses);
+
+  // сохранение фото
+  Future savePhoto(Map itemData, ImageSource source);
+
+  // удаление фото
+  Future deletePhoto(Map itemData, String link);
 
 }

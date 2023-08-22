@@ -43,3 +43,12 @@ String simItemReplace = 'sim_item_replace';
 
 // получение записей истории выбранной позиции
 String simItemHistory = 'sim_item_history';
+
+// изменение статуса ТМЦ
+String simItemChangeStatus = 'sim_item_change_status';
+
+// сохранить фото
+String simItemSavePhoto = 'sim_item_save_photo';
+
+// сохранить фото
+String simItemDelPhoto = 'sim_item_del_photo';

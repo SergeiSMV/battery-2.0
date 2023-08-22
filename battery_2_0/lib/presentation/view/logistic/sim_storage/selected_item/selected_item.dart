@@ -12,6 +12,7 @@ import '../../../../../domain/models/departments/logistic/sim_items/sim_items.da
 import '../../../../../domain/models/departments/logistic/sim_same_items/sim_same_items.dart';
 import '../../../../widgets/app_colors.dart';
 import '../../../../widgets/app_text_styles.dart';
+import '../../../../widgets/logistic/sim_storage/selected_item/sim_item_image.dart';
 
 
 class SelectedItem extends ConsumerStatefulWidget {
@@ -45,14 +46,13 @@ class _SelectedItem extends ConsumerState <SelectedItem> with SingleTickerProvid
   @override
   void dispose(){
     animationController.dispose();
+    ref.invalidate(simSelectedItemProvider);
     super.dispose();
   }
   
 
   @override
   Widget build(BuildContext context) {
-
-
 
     final itemPack = ref.watch(simSelectedItemProvider(widget.itemId));
     final allSimItems = ref.watch(simItemsProvider).value;
@@ -65,7 +65,7 @@ class _SelectedItem extends ConsumerState <SelectedItem> with SingleTickerProvid
           error: (error, _) => Text(error.toString()), 
           data: (data) {
 
-            SimItems item = SimItems(item: data['selected_item']);
+            SimItems item = SimItems(item: Map.from(data['selected_item']));
             int totalQuantity = data['total_quantity'];
 
             List<Widget> itemMenu = SimItemsImpl().selectedItemFabMenu(
@@ -101,7 +101,7 @@ class _SelectedItem extends ConsumerState <SelectedItem> with SingleTickerProvid
                           item.images.isEmpty ? 
                             Center(child: Image.asset('lib/images/no_photo.png', scale: 2.0, color: firmColor.withOpacity(0.5))) 
                             : 
-                            Text('есть фото', style: firm14,),
+                            simItemImage(context, allUserAccesses, item.images, Map.from(data['selected_item']), refresh),
                           Divider(indent: 20, endIndent: 20, thickness: 1.0, color: firmColor.withOpacity(0.4),),
                           Container(
                             width: MediaQuery.of(context).size.width * 0.9,
@@ -131,40 +131,40 @@ class _SelectedItem extends ConsumerState <SelectedItem> with SingleTickerProvid
                               ),
                             ),
                           ),
-                          Divider(indent: 20, endIndent: 20, thickness: 1.0, color: firmColor.withOpacity(0.4),),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            decoration: BoxDecoration(color: Colors.blue.shade100.withOpacity(0.1), shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(5)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('• Комментарии:' , style: firm14,),
-                                  const SizedBox(height: 4,),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 8),
-                                    child: item.comment[0] == '' ? Text('комментарии отсутствуют', style: firm14,) : ListView.builder(
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      itemCount: item.comment.length,
-                                      itemBuilder: (context, index){
-                                        return Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text('${item.comment[index]};', style: firm12,),
-                                            const SizedBox(height: 3,)
-                                          ],
-                                        );
-                                      }
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
+                          // Divider(indent: 20, endIndent: 20, thickness: 1.0, color: firmColor.withOpacity(0.4),),
+                          // Container(
+                          //   width: MediaQuery.of(context).size.width * 0.9,
+                          //   decoration: BoxDecoration(color: Colors.blue.shade100.withOpacity(0.1), shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(5)),
+                          //   child: Padding(
+                          //     padding: const EdgeInsets.all(10),
+                          //     child: Column(
+                          //       mainAxisSize: MainAxisSize.min,
+                          //       crossAxisAlignment: CrossAxisAlignment.start,
+                          //       children: [
+                          //         Text('• Комментарии:' , style: firm14,),
+                          //         const SizedBox(height: 4,),
+                          //         Padding(
+                          //           padding: const EdgeInsets.only(left: 8),
+                          //           child: item.comment[0] == '' ? Text('комментарии отсутствуют', style: firm14,) : ListView.builder(
+                          //             physics: const NeverScrollableScrollPhysics(),
+                          //             shrinkWrap: true,
+                          //             itemCount: item.comment.length,
+                          //             itemBuilder: (context, index){
+                          //               return Column(
+                          //                 mainAxisSize: MainAxisSize.min,
+                          //                 crossAxisAlignment: CrossAxisAlignment.start,
+                          //                 children: [
+                          //                   Text('${item.comment[index]};', style: firm12,),
+                          //                   const SizedBox(height: 3,)
+                          //                 ],
+                          //               );
+                          //             }
+                          //           ),
+                          //         )
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
                           Divider(indent: 20, endIndent: 20, thickness: 1.0, color: firmColor.withOpacity(0.4),),
                           Container(
                             width: MediaQuery.of(context).size.width * 0.9,
@@ -236,7 +236,7 @@ class _SelectedItem extends ConsumerState <SelectedItem> with SingleTickerProvid
 
 Color appBarColor(String status){
   late Color color; 
-  if (status == 'work'){ color = const Color(0xFFffd77e); }
+  if (status == 'work'){ color = Colors.green.shade100; }
   else if (status == 'control'){ color = Colors.blue.shade200; }
   else { color = Colors.red; }
   return color;

@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:battery_2_0/presentation/widgets/app_text_styles.dart';
+import 'package:battery_2_0/presentation/widgets/logistic/sim_storage/selected_item/set_image_source.dart';
 import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -8,6 +9,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import '../../../../view/logistic/sim_storage/selected_item/selected_item_edit.dart';
 import '../../../../view/logistic/sim_storage/selected_item/selected_item_history.dart';
 import '../../../../view/logistic/sim_storage/selected_item/selected_item_replace.dart';
+import '../../../../view/logistic/sim_storage/selected_item/selected_item_status.dart';
 import '../../../app_colors.dart';
 import 'sim_del_alertdialog.dart';
 
@@ -118,7 +120,7 @@ Widget itemHistory(BuildContext context, String itemId, Function refresh){
 
 
 // изменение статуса позиции
-Widget itemStatus(){
+Widget itemStatus(BuildContext context, Map itemData, Function refresh){
   return Row(
     children: [
       Bubble(
@@ -134,15 +136,17 @@ Widget itemStatus(){
         elevation: 3.0,
         backgroundColor: firmColor.withOpacity(0.7),
         heroTag: 'itemStatus',
-        onPressed: (){ print('TAP the itemStatus'); },
+        onPressed: (){ Navigator.push(context, MaterialPageRoute(
+          builder: (context) => SelectedItemStatus(itemData: itemData,))
+        ).then((_){ refresh(); }); }, 
         child: Icon(MdiIcons.alertRhombus, color: Colors.white, size: 25,),
       ),
     ],
   );
 }
 
-// добавление фото позиции
-Widget itemAddPhoto(){
+// добавление фото
+Widget itemAddPhoto(BuildContext context, Map itemData, Function refresh){
   return Row(
     children: [
       Bubble(
@@ -158,7 +162,7 @@ Widget itemAddPhoto(){
         elevation: 3.0,
         backgroundColor: firmColor.withOpacity(0.7),
         heroTag: 'itemAddPhoto',
-        onPressed: (){ print('TAP the itemAddPhoto'); },
+        onPressed: () async { setImageSource(context, itemData).then((_){ refresh(); }); },
         child: Icon(MdiIcons.cameraPlus, color: Colors.white, size: 25,),
       ),
     ],
