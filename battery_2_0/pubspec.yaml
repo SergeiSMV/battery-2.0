@@ -57,6 +57,7 @@ dependencies:
   grouped_list: ^5.1.2
   carousel_slider: ^4.2.1
   image_picker: ^1.0.2
+  mobile_scanner: ^3.4.1
 
 dev_dependencies:
   flutter_test:

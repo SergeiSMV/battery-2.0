@@ -8,7 +8,6 @@ import '../../../../../data/bloc/logistic/sim_item_replace_bloc.dart';
 import '../../../../../data/departments/logistic/sim_items_impl.dart';
 import '../../../../../domain/models/departments/logistic/sim_items/sim_items.dart';
 import '../../../../widgets/app_colors.dart';
-import '../../../../widgets/logistic/sim_storage/selected_item/replace/sim_multiple_cells_dialog.dart';
 
 class SelectedItemReplace extends StatelessWidget {
   final Map itemData;
@@ -79,7 +78,7 @@ class SelectedItemReplace extends StatelessWidget {
 
                       _enterValue('склад', replace.place, () async {
                         ProgressHUD.of(context)?.showWithText('загрузка');
-                        await SimItemsImpl().getPlaces(context).then((value) {
+                        await SimItemsImpl().getPlaces(context, replaceState).then((value) {
                           ProgressHUD.of(context)?.dismiss();
                           value is List ? null : messenger.toast(value.toString());
                         });
@@ -87,22 +86,12 @@ class SelectedItemReplace extends StatelessWidget {
 
                       const SizedBox(height: 8),
                       _enterValue('ячейка', replace.cell, () async {
-                        List roomates;
+                        // List roomates;
                         ProgressHUD.of(context)?.showWithText('загрузка');
-                        await SimItemsImpl().getCells(context, replace.place).then((value) {
+                        await SimItemsImpl().getCells(context, replace.place, replaceState).then((value) async {
                           ProgressHUD.of(context)?.dismiss();
                           value is List ? {} : messenger.toast(value.toString());
-                          roomates = SimItemsImpl().checkCell(allItems, replaceState['replace']['place'], replaceState['replace']['cell'], item.id);
-                          roomates.isEmpty ? 
-                          {
-                            replaceState['merge'] = 'no',
-                            replaceState['merge_items'] = [],
-                            context.read<SimItemReplaceBloc>().add(UpdateReplaceValueEvent(updateData: replaceState))
-                          } 
-                          : 
-                          {
-                            replaceState['replace']['cell'] != item.cell ? simMultipleCellsDialog(context, roomates) : null
-                          };
+                          await SimItemsImpl().checkCell(context, allItems, replaceState);
                         });
                       }),
 

@@ -1,11 +1,6 @@
-
-
-
 import 'package:battery_2_0/presentation/widgets/app_text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../../data/bloc/logistic/sim_item_replace_bloc.dart';
 import '../../../../../../domain/models/departments/logistic/sim_items/sim_items.dart';
 import '../../../../app_colors.dart';
 
@@ -19,9 +14,6 @@ simMultipleCellsDialog(BuildContext motherContext, List checkCell){
     backgroundColor: Colors.transparent,
     context: motherContext, 
     builder: (context){
-
-      Map replaceState = motherContext.read<SimItemReplaceBloc>().state;
-
       return Container(
         width: MediaQuery.of(context).size.width,
         decoration: const BoxDecoration(
@@ -84,11 +76,7 @@ simMultipleCellsDialog(BuildContext motherContext, List checkCell){
                     height: 35,
                     width: MediaQuery.of(context).size.width * 0.875,
                     child: TextButton(onPressed: () {
-                      replaceState['merge'] = 'yes';
-                      replaceState['merge_items'] = checkCell;
-                      replaceState['replace']['pallet_size'] = checkCell[0]['pallet_size'];
-                      motherContext.read<SimItemReplaceBloc>().add(UpdateReplaceValueEvent(updateData: replaceState));
-                      Navigator.pop(context);
+                      Navigator.pop(context, 'merge');
                     }, child: Text('объединить', style: white16,))
                   ),
                   const SizedBox(height: 10),
@@ -100,9 +88,7 @@ simMultipleCellsDialog(BuildContext motherContext, List checkCell){
                     height: 35,
                     width: MediaQuery.of(context).size.width * 0.875,
                     child: TextButton(onPressed: () {
-                      replaceState['replace']['cell'] = '';
-                      motherContext.read<SimItemReplaceBloc>().add(UpdateReplaceValueEvent(updateData: replaceState));
-                      Navigator.pop(context);
+                      Navigator.pop(context, 'cancel');
                     }, child: Text('выбрать другую ячейку', style: white16,))
                   ),
                 ],

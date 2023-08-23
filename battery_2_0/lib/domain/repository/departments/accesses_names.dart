@@ -11,7 +11,7 @@ String simStorage = 'sim_storage';
 String simOrders = 'sim_orders';
 
 // поступление на склад (СиМ)
-String simAdmission = 'sim_admission';
+String simComing = 'sim_coming';
 
 
 
@@ -38,6 +38,9 @@ String simDelPhoto = 'sim_delphoto';
 
 // удаление позиции (СиМ)
 String simDelete = 'sim_delete';
+
+// ручное размещение поступления (СиМ)
+String simComingManual = 'sim_coming_manual';
 
 
 

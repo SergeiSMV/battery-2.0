@@ -12,10 +12,11 @@ import 'package:intl/intl.dart';
 
 import '../../../domain/repository/departments/accesses_names.dart';
 import '../../../domain/repository/server/sim.dart';
+import '../../../presentation/widgets/logistic/sim_storage/selected_item/replace/sim_multiple_cells_dialog.dart';
 import '../../../presentation/widgets/logistic/sim_storage/selected_item/selected_item_fabmenu.dart';
-import '../../../presentation/widgets/logistic/sim_storage/selected_item/replace/sim_get_cell_dialog.dart';
-import '../../../presentation/widgets/logistic/sim_storage/selected_item/set_item_element.dart';
-import '../../../presentation/widgets/logistic/sim_storage/selected_item/replace/sim_get_place_dialog.dart';
+import '../../../presentation/widgets/logistic/sim_storage/cell_dialog.dart';
+import '../../../presentation/widgets/logistic/sim_storage/sim_elements_dialog.dart';
+import '../../bloc/logistic/sim_item_replace_bloc.dart';
 import '../../server/connect_impl.dart';
 
 class SimItemsImpl extends SimItemsRepository{
@@ -122,7 +123,11 @@ class SimItemsImpl extends SimItemsRepository{
   Future getCategories(BuildContext context, TextEditingController categoryCntr) async {
     dynamic requestResult;
     await ConnectionImpl().request(simGetCategories, {}).then((value) async {
-      value is List ? await setItemElement(context, 'выберите категорию', value, categoryCntr) : null;
+      value is List ? await simElementsDialog(context, 'выберите категорию', value).then((value){
+        value == null ? null : {
+          categoryCntr.text = value
+        };
+      }) : null;
       requestResult = value;
     });
     return requestResult;
@@ -135,7 +140,11 @@ class SimItemsImpl extends SimItemsRepository{
     Map requestData = {'category': category};
     dynamic requestResult;
     await ConnectionImpl().request(simGetNames, requestData).then((value) async {
-      value is List ? await setItemElement(context, 'выберите наименование', value, nameCntr) : null;
+      value is List ? await simElementsDialog(context, 'выберите наименование', value).then((value){
+        value == null ? null : {
+          nameCntr.text = value
+        };
+      }) : null;
       requestResult = value;
     });
     return requestResult;
@@ -146,7 +155,11 @@ class SimItemsImpl extends SimItemsRepository{
   Future getColors(BuildContext context, TextEditingController colorCntr) async {
     dynamic requestResult;
     await ConnectionImpl().request(simGetColors, {}).then((value) async {
-      value is List ? await setItemElement(context, 'выберите цвет', value, colorCntr) : null;
+      value is List ? await simElementsDialog(context, 'выберите цвет', value).then((value){
+        value == null ? null : {
+          colorCntr.text = value
+        };
+      }) : null;
       requestResult = value;
     });
     return requestResult;
@@ -154,13 +167,17 @@ class SimItemsImpl extends SimItemsRepository{
   
   // Получение списка поставщиков по категории и наименованию
   @override
-  Future getProducers(BuildContext context, TextEditingController colorCntr, Map itemData) async {
+  Future getProducers(BuildContext context, TextEditingController producerCntr, Map itemData) async {
     String category = itemData['category'];
     String name = itemData['name'];
     Map requestData = {'category': category, 'name': name};
     dynamic requestResult;
     await ConnectionImpl().request(simGetProducers, requestData).then((value) async {
-      value is List ? await setItemElement(context, 'выберите поставщика', value, colorCntr) : null;
+      value is List ? await simElementsDialog(context, 'выберите поставщика', value).then((value){
+        value == null ? null : {
+          producerCntr.text = value
+        };
+      }) : null;
       requestResult = value;
     });
     return requestResult;
@@ -168,14 +185,18 @@ class SimItemsImpl extends SimItemsRepository{
   
   // Получение списка ед. измерения по категории, наименованию и поставщику
   @override
-  Future getUnits(BuildContext context, TextEditingController colorCntr, Map itemData) async {
+  Future getUnits(BuildContext context, TextEditingController unitCntr, Map itemData) async {
     String category = itemData['category'];
     String name = itemData['name'];
     String producer = itemData['producer'];
     Map requestData = {'category': category, 'name': name, 'producer': producer};
     dynamic requestResult;
     await ConnectionImpl().request(simGetUnits, requestData).then((value) async {
-      value is List ? await setItemElement(context, 'выберите ед. измерения', value, colorCntr) : null;
+      value is List ? await simElementsDialog(context, 'выберите ед. измерения', value).then((value){
+        value == null ? null : {
+          unitCntr.text = value
+        };
+      }) : null;
       requestResult = value;
     });
     return requestResult;
@@ -196,10 +217,16 @@ class SimItemsImpl extends SimItemsRepository{
   
   // Получение списка складов
   @override
-  Future getPlaces(BuildContext context) async {
+  Future getPlaces(BuildContext context, Map replaceState) async {
     dynamic responce;
     await ConnectionImpl().request(simGetPlaces, {}).then((value) async {
-      value is List ? await simGetPlaceDialog(context, 'выберите склад', value) : null;
+      value is List ? await simElementsDialog(context, 'выберите размер паллета', value).then((value) { 
+        value == null ? null : {
+          replaceState['replace']['place'] = value,
+          replaceState['replace']['cell'] = '',
+          context.read<SimItemReplaceBloc>().add(UpdateReplaceValueEvent(updateData: Map.from(replaceState)))
+        };
+      }) : null;
       responce = value;
     });
     return responce;
@@ -207,10 +234,18 @@ class SimItemsImpl extends SimItemsRepository{
 
   // Получение списка ячеек
   @override
-  Future getCells(BuildContext context, String place) async {
+  Future getCells(BuildContext context, String place, Map replaceState) async {
     dynamic requestResult;
     await ConnectionImpl().request(simGetCells, {'place': place}).then((value) async {
-      value is List ? await simGetCellDialog(context, value) : null;
+      value is List ? {
+        await cellDialog(context, value).then((cellValue){
+          cellValue == null ? null : {
+            replaceState['replace']['cell'] = cellValue,
+            replaceState['replace']['pallet_size'] = replaceState['default']['pallet_size'],
+            context.read<SimItemReplaceBloc>().add(UpdateReplaceValueEvent(updateData: replaceState))
+          };
+        })
+      } : null;
       requestResult = value;
     });
     return requestResult;
@@ -218,15 +253,32 @@ class SimItemsImpl extends SimItemsRepository{
 
   // Проверка занятости выбранной ячейки
   @override
-  List checkCell(List allItems, String place, String cell, String itemId){
+  Future checkCell(BuildContext context, List allItems, Map replaceState) async {
     List roommates = [];
+    String place = replaceState['replace']['place'];
+    String cell = replaceState['replace']['cell'];
+    String itemId = replaceState['replace']['itemId'].toString();
     for (var r in allItems){
       if(r['place'] == place && r['cell'] == cell && r['itemId'] != itemId){
         r.remove('date');
         roommates.add(r);
       }
     }
-    return roommates;
+    roommates.isEmpty ? {
+      replaceState['merge'] = 'no', replaceState['merge_items'] = [],
+      context.read<SimItemReplaceBloc>().add(UpdateReplaceValueEvent(updateData: replaceState))
+    } : {
+      await simMultipleCellsDialog(context, roommates).then((result){
+        result == 'merge' ? {
+          replaceState['merge'] = 'yes', replaceState['merge_items'] = roommates,
+          replaceState['replace']['pallet_size'] = roommates[0]['pallet_size'],
+          context.read<SimItemReplaceBloc>().add(UpdateReplaceValueEvent(updateData: replaceState))
+        } : {
+          replaceState['replace']['cell'] = '',
+          context.read<SimItemReplaceBloc>().add(UpdateReplaceValueEvent(updateData: replaceState))
+        };
+      })
+    };
   }
 
   // перемещение ТМЦ (сохранение в БД)
@@ -272,7 +324,7 @@ class SimItemsImpl extends SimItemsRepository{
     return requestResult;
   }
 
-  // кнопка удаления фото
+  // КНОПКА удаления фото (проверка доступа)
   @override
   bool imageDeleteButton(Accesses? allAccesses) {
     bool deleteAccess = false;

@@ -6,6 +6,7 @@ import '../../data/user/device_impl.dart';
 import '../view/logistic/logistic.dart';
 import '../view/logistic/sim_storage/selected_item/selected_item.dart';
 import '../view/logistic/sim_storage/sim_catalog.dart';
+import '../view/logistic/sim_storage/sim_coming.dart';
 import '../view/logistic/sim_storage/sim_storage.dart';
 import '../view/users/all_users.dart';
 import '../view/home.dart';
@@ -55,8 +56,8 @@ final router = GoRouter(
               builder: ((context, state) => const Home()),
             ),
             GoRoute(
-              path: 'admission',
-              builder: ((context, state) => const Home()),
+              path: 'coming',
+              builder: ((context, state) => const SimComingView()),
             ),
             GoRoute(
               path: 'catalog',

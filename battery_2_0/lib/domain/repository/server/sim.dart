@@ -52,3 +52,6 @@ String simItemSavePhoto = 'sim_item_save_photo';
 
 // сохранить фото
 String simItemDelPhoto = 'sim_item_del_photo';
+
+// запрос информации по штрих коду
+String simCheckBarcode = 'sim_check_barcode';

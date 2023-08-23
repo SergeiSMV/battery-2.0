@@ -207,12 +207,11 @@ class _SelectedItemEditState extends State<SelectedItemEdit> {
                       const SizedBox(height: 8),
                       _enterValue('дата поступления', TextInputType.text, dateCntr, true, () async {
                         ProgressHUD.of(context)?.showWithText('загрузка');
-                        await calendar(context, dateCntr).then((_) {
+                        await calendar(context).then((value) {
                           ProgressHUD.of(context)?.dismiss();
-                          dateCntr.text.isEmpty || dateCntr.text == dataToSave['fifo'] ?  null :
-                          setState((){ 
-                              dataToSave['fifo'] = dateCntr.text;
-                          });
+                          value == null ? null : {
+                            dateCntr.text == dataToSave['fifo'] ?  null : setState((){ dataToSave['fifo'] = value; dateCntr.text = value; })
+                          };
                         });
                       }),
                       const SizedBox(height: 12),

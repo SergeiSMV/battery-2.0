@@ -26,8 +26,8 @@ class SimStorageImpl extends SimStorageRepository{
         dp['icon'] = MdiIcons.fileDocumentOutline,
         sim.add(dp)
       } : null;
-      dp['depence'] == depence && dp['chapter'] == simAdmission ? {
-        dp['route'] = '/logistic/sim/admission', 
+      dp['depence'] == depence && dp['chapter'] == simComing ? {
+        dp['route'] = '/logistic/sim/coming', 
         dp['description'] = 'поступление',
         dp['icon'] = 'fileDocumentOutline',
         dp['icon'] = MdiIcons.packageVariantClosedPlus,

@@ -123,9 +123,9 @@ class _SelectedItemStatusState extends State<SelectedItemStatus> {
 
                       _enterValue('дата', TextInputType.text, date, true, () async {
                         ProgressHUD.of(context)?.showWithText('загрузка');
-                        await calendar(context, date).then((value){
+                        await calendar(context).then((value){
                           ProgressHUD.of(context)?.dismiss();
-                          setState(() {});
+                          value == null ? null : setState((){ date.text = value; });
                         });
                       }),
                       const SizedBox(height: 12),

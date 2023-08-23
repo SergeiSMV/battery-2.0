@@ -36,22 +36,22 @@ abstract class SimItemsRepository{
   Future getColors(BuildContext context, TextEditingController colorCntr);
 
   // Получение списка поставщиков по категории и наименованию
-  Future getProducers(BuildContext context, TextEditingController colorCntr, Map itemData);
+  Future getProducers(BuildContext context, TextEditingController producerCntr, Map itemData);
 
   // Получение списка ед. измерения по категории, наименованию и поставщику
-  Future getUnits(BuildContext context, TextEditingController colorCntr, Map itemData);
+  Future getUnits(BuildContext context, TextEditingController unitCntr, Map itemData);
 
   // Сохранение корректировки
   Future saveEdit(Map dataToSave, Map defaultData);
 
   // Получение списка складов
-  Future getPlaces(BuildContext context);
+  Future getPlaces(BuildContext context, Map replaceState);
 
   // Получение списка ячеек
-  Future getCells(BuildContext context, String place);
+  Future getCells(BuildContext context, String place, Map replaceState);
 
   // Проверка занятости выбранной ячейки
-  List checkCell(List allItems, String place, String cell, String itemId);
+  Future checkCell(BuildContext context, List allItems, Map replaceState);
 
   // перемещение ТМЦ
   Future<String> replace(Map replaceData);
