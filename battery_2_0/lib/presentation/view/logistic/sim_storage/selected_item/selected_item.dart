@@ -74,6 +74,7 @@ class _SelectedItem extends ConsumerState <SelectedItem> with SingleTickerProvid
     
             return Scaffold(
               appBar: AppBar(
+                elevation: 1,
                 leading: IconButton(
                   onPressed: () { Navigator.pop(context); },
                   icon: Icon(Icons.keyboard_arrow_left, color: firmColor, size: 25,),

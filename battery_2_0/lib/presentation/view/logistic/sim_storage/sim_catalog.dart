@@ -54,6 +54,7 @@ class _SimCatalogState extends ConsumerState<SimCatalog> {
 
           return Scaffold(
             appBar: AppBar(
+              elevation: 1,
               leading: IconButton(
                 onPressed: () {
                   Navigator.pop(context);
@@ -319,7 +320,7 @@ class _SimCatalogState extends ConsumerState<SimCatalog> {
                                                         child: CircleAvatar(
                                                           radius: 25,
                                                           backgroundColor: leadingColor(item.status), 
-                                                          child: Text(item.cell, style: firm10)
+                                                          child: Text(item.cell, style: firm10, textAlign: TextAlign.center,)
                                                         )
                                                       ),
                                                       title: Text(item.fullName, style: firm12),

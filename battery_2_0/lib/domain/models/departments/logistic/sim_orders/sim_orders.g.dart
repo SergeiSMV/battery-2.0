@@ -2,17 +2,17 @@
 
 // ignore_for_file: non_constant_identifier_names
 
-
-part of 'user.dart';
+part of 'sim_orders.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_User _$$_UserFromJson(Map<String, dynamic> json) => _$_User(
-      userInfoData: json['userInfoData'] as Map<String, dynamic>,
+_$_SimOrders _$$_SimOrdersFromJson(Map<String, dynamic> json) => _$_SimOrders(
+      orders: json['orders'] as Map<String, dynamic>,
     );
 
-Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
-      'userInfoData': instance.userInfoData,
+Map<String, dynamic> _$$_SimOrdersToJson(_$_SimOrders instance) =>
+    <String, dynamic>{
+      'orders': instance.orders,
     };

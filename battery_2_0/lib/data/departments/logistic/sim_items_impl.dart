@@ -12,7 +12,7 @@ import 'package:intl/intl.dart';
 
 import '../../../domain/repository/departments/accesses_names.dart';
 import '../../../domain/repository/server/sim.dart';
-import '../../../presentation/widgets/logistic/sim_storage/selected_item/replace/sim_multiple_cells_dialog.dart';
+import '../../../presentation/widgets/logistic/sim_storage/sim_multiple_cells_dialog.dart';
 import '../../../presentation/widgets/logistic/sim_storage/selected_item/selected_item_fabmenu.dart';
 import '../../../presentation/widgets/logistic/sim_storage/cell_dialog.dart';
 import '../../../presentation/widgets/logistic/sim_storage/sim_elements_dialog.dart';
@@ -112,7 +112,7 @@ class SimItemsImpl extends SimItemsRepository{
   @override
   Future<String> deleteItem(Map itemData) async {
     dynamic requestResult;
-    await ConnectionImpl().request(simDeleteItem, {'itemData': itemData}).then((value) async {
+    await ConnectionImpl().request(simDeleteItem, itemData).then((value) async {
       requestResult = value;
     });
     return requestResult;
@@ -258,27 +258,28 @@ class SimItemsImpl extends SimItemsRepository{
     String place = replaceState['replace']['place'];
     String cell = replaceState['replace']['cell'];
     String itemId = replaceState['replace']['itemId'].toString();
-    for (var r in allItems){
-      if(r['place'] == place && r['cell'] == cell && r['itemId'] != itemId){
-        r.remove('date');
-        roommates.add(r);
-      }
-    }
-    roommates.isEmpty ? {
-      replaceState['merge'] = 'no', replaceState['merge_items'] = [],
-      context.read<SimItemReplaceBloc>().add(UpdateReplaceValueEvent(updateData: replaceState))
-    } : {
-      await simMultipleCellsDialog(context, roommates).then((result){
-        result == 'merge' ? {
-          replaceState['merge'] = 'yes', replaceState['merge_items'] = roommates,
-          replaceState['replace']['pallet_size'] = roommates[0]['pallet_size'],
-          context.read<SimItemReplaceBloc>().add(UpdateReplaceValueEvent(updateData: replaceState))
-        } : {
-          replaceState['replace']['cell'] = '',
-          context.read<SimItemReplaceBloc>().add(UpdateReplaceValueEvent(updateData: replaceState))
-        };
-      })
-    };
+    cell.contains('транзит') ? null :
+      {for (var r in allItems){
+        if(r['place'] == place && r['cell'] == cell && r['itemId'] != itemId){
+          r.remove('date'),
+          roommates.add(r)
+        }
+      },
+      roommates.isEmpty ? {
+        replaceState['merge'] = 'no', replaceState['merge_items'] = [],
+        context.read<SimItemReplaceBloc>().add(UpdateReplaceValueEvent(updateData: replaceState))
+      } : {
+        await multipleCellsDialog(context, roommates).then((result){
+          result == 'merge' ? {
+            replaceState['merge'] = 'yes', replaceState['merge_items'] = roommates,
+            replaceState['replace']['pallet_size'] = roommates[0]['pallet_size'],
+            context.read<SimItemReplaceBloc>().add(UpdateReplaceValueEvent(updateData: replaceState))
+          } : {
+            replaceState['replace']['cell'] = '',
+            context.read<SimItemReplaceBloc>().add(UpdateReplaceValueEvent(updateData: replaceState))
+          };
+        })
+      }};
   }
 
   // перемещение ТМЦ (сохранение в БД)

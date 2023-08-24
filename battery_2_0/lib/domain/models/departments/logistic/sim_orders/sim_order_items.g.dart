@@ -2,19 +2,18 @@
 
 // ignore_for_file: non_constant_identifier_names
 
-
-part of 'sim_storage_main.dart';
+part of 'sim_order_items.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_SimStorageMain _$$_SimStorageMainFromJson(Map<String, dynamic> json) =>
-    _$_SimStorageMain(
-      elements: json['elements'] as Map<String, dynamic>,
+_$_SimOrderItems _$$_SimOrderItemsFromJson(Map<String, dynamic> json) =>
+    _$_SimOrderItems(
+      item: json['item'] as Map<String, dynamic>,
     );
 
-Map<String, dynamic> _$$_SimStorageMainToJson(_$_SimStorageMain instance) =>
+Map<String, dynamic> _$$_SimOrderItemsToJson(_$_SimOrderItems instance) =>
     <String, dynamic>{
-      'elements': instance.elements,
+      'item': instance.item,
     };

@@ -1,11 +1,11 @@
 import 'package:battery_2_0/presentation/widgets/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../../../domain/models/departments/logistic/sim_items/sim_items.dart';
-import '../../../../app_colors.dart';
+import '../../../../domain/models/departments/logistic/sim_items/sim_items.dart';
+import '../../app_colors.dart';
 
 
-simMultipleCellsDialog(BuildContext motherContext, List checkCell){
+multipleCellsDialog(BuildContext motherContext, List checkCell){
   return showModalBottomSheet(
     enableDrag: false,
     isDismissible: false,

@@ -10,7 +10,7 @@ import '../../../domain/repository/departments/accesses_names.dart';
 import '../../../domain/repository/server/sim.dart';
 import '../../../presentation/widgets/logistic/sim_storage/coming/barcode_scanner.dart';
 import '../../../presentation/widgets/logistic/sim_storage/cell_dialog.dart';
-import '../../../presentation/widgets/logistic/sim_storage/selected_item/replace/sim_multiple_cells_dialog.dart';
+import '../../../presentation/widgets/logistic/sim_storage/sim_multiple_cells_dialog.dart';
 import '../../../presentation/widgets/logistic/sim_storage/sim_elements_dialog.dart';
 import '../../bloc/logistic/sim_coming_bloc.dart';
 import '../../server/connect_impl.dart';
@@ -260,29 +260,39 @@ class SimComingImpl extends SimComingRepository{
     String place = comingState['place'];
     String cell = comingState['cell'];
     List roommates = [];
-    for (var r in allItems){
-      if(r['place'] == place && r['cell'] == cell){
-        r.remove('date');
-        roommates.add(r);
-      }
-    }
-    roommates.isEmpty ? {
-      comingState['merge'] = 'no', comingState['merge_items'] = [],
-      context.read<SimComingBloc>().add(SimComingChange(data: Map.from(comingState)))
-    } : {
-      await simMultipleCellsDialog(context, roommates).then((result){
-        result == 'merge' ? {
-          comingState['merge'] = 'yes', comingState['merge_items'] = roommates,
-          comingState['pallet_size'] = '',
-          context.read<SimComingBloc>().add(SimComingChange(data: Map.from(comingState)))
-        } : {
-          comingState['cell'] = '',
-          context.read<SimComingBloc>().add(SimComingChange(data: Map.from(comingState)))
-        };
-      })
-    };
+    cell.contains('транзит') ? null :
+      {for (var r in allItems){
+        if(r['place'] == place && r['cell'] == cell){
+          r.remove('date'),
+          roommates.add(r)
+        }
+      },
+      roommates.isEmpty ? {
+        comingState['merge'] = 'no', comingState['merge_items'] = [],
+        context.read<SimComingBloc>().add(SimComingChange(data: Map.from(comingState)))
+      } : {
+        await multipleCellsDialog(context, roommates).then((result){
+          result == 'merge' ? {
+            comingState['merge'] = 'yes', comingState['merge_items'] = roommates,
+            comingState['pallet_size'] = '',
+            context.read<SimComingBloc>().add(SimComingChange(data: Map.from(comingState)))
+          } : {
+            comingState['cell'] = '',
+            context.read<SimComingBloc>().add(SimComingChange(data: Map.from(comingState)))
+          };
+        })
+      }};
   }
-
+  
+  // Провести поступление
+  @override
+  Future comingSave(BuildContext context, Map comingState) async {
+    dynamic requestResult;
+    await ConnectionImpl().request(simSaveComing, comingState).then((value) async {
+      requestResult = value.toString();
+    });
+    return requestResult;
+  }
 
 
 

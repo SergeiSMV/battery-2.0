@@ -20,6 +20,7 @@ class SimStorage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        elevation: 1,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);

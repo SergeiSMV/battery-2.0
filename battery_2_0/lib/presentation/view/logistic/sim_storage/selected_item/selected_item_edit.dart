@@ -210,7 +210,7 @@ class _SelectedItemEditState extends State<SelectedItemEdit> {
                         await calendar(context).then((value) {
                           ProgressHUD.of(context)?.dismiss();
                           value == null ? null : {
-                            dateCntr.text == dataToSave['fifo'] ?  null : setState((){ dataToSave['fifo'] = value; dateCntr.text = value; })
+                            setState((){ dataToSave['fifo'] = value; dateCntr.text = value; })
                           };
                         });
                       }),

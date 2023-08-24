@@ -56,4 +56,7 @@ abstract class SimComingRepository{
   // Проверка занятости выбранной ячейки
   Future comingCheckCell(BuildContext context, List allItems, Map comingState);
 
+  // Провести поступление
+  Future comingSave(BuildContext context, Map comingState);
+
 }

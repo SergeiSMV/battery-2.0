@@ -10,6 +10,18 @@ String simStorage = 'sim_storage';
 // заявки (СиМ)
 String simOrders = 'sim_orders';
 
+// создание заявок (СиМ)
+String simAddOrders = 'sim_add_orders';
+
+// удаление заявок (СиМ)
+String simDelOrders = 'sim_del_orders';
+
+// выдача заявок (СиМ)
+String simExOrders = 'sim_ex_orders';
+
+
+
+
 // поступление на склад (СиМ)
 String simComing = 'sim_coming';
 
@@ -41,7 +53,6 @@ String simDelete = 'sim_delete';
 
 // ручное размещение поступления (СиМ)
 String simComingManual = 'sim_coming_manual';
-
 
 
 // Склад готовой продукции

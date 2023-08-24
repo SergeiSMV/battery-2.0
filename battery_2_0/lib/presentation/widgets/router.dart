@@ -7,6 +7,7 @@ import '../view/logistic/logistic.dart';
 import '../view/logistic/sim_storage/selected_item/selected_item.dart';
 import '../view/logistic/sim_storage/sim_catalog.dart';
 import '../view/logistic/sim_storage/sim_coming.dart';
+import '../view/logistic/sim_storage/sim_orders/sim_orders_view.dart';
 import '../view/logistic/sim_storage/sim_storage.dart';
 import '../view/users/all_users.dart';
 import '../view/home.dart';
@@ -53,7 +54,7 @@ final router = GoRouter(
           routes: [
             GoRoute(
               path: 'orders',
-              builder: ((context, state) => const Home()),
+              builder: ((context, state) => const SimOrdersView()),
             ),
             GoRoute(
               path: 'coming',
@@ -72,10 +73,6 @@ final router = GoRouter(
                   )),
                 ),
               ]
-            ),
-            GoRoute(
-              path: 'catalog',
-              builder: ((context, state) => const Home()),
             ),
             GoRoute(
               path: 'identification',

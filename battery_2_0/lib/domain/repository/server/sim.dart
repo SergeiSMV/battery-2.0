@@ -55,3 +55,16 @@ String simItemDelPhoto = 'sim_item_del_photo';
 
 // запрос информации по штрих коду
 String simCheckBarcode = 'sim_check_barcode';
+
+// проведение (сохранение) поступления
+String simSaveComing = 'sim_save_coming';
+
+
+
+
+
+// Запрос всех заявок (СиМ)
+String simAllOrders = 'sim_all_orders';
+
+// rout запрос комплектующих по заявке (СиМ)
+String simOrderItems = 'sim_order_items';
