@@ -1,5 +1,3 @@
-import 'package:battery_2_0/presentation/view/logistic/sim_storage/sim_orders/sim_order_selected.dart';
-import 'package:battery_2_0/presentation/view/logistic/sim_storage/sim_orders/sim_orders_history.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +10,9 @@ import '../../../../../data/providers/user/user_accesses_provider.dart';
 import '../../../../../domain/models/departments/logistic/sim_orders/sim_orders.dart';
 import '../../../../widgets/app_colors.dart';
 import '../../../../widgets/app_text_styles.dart';
+import 'sim_order_add.dart';
+import 'sim_order_selected.dart';
+import 'sim_orders_history.dart';
 
 class SimOrdersView extends ConsumerWidget {
   const SimOrdersView({super.key});
@@ -22,6 +23,7 @@ class SimOrdersView extends ConsumerWidget {
 
     final openedOrders = ref.watch(simOrdersProvider);
     final closedOrders = ref.watch(closeOrdersProvider);
+    final uniqItems = ref.watch(simUniqItemsProvider);
     // ignore: unused_local_variable
     final allUserAccesses = ref.watch(allAccessesProvider).value;
     bool addOrder = SimOrdersImpl().addOrderButton(allUserAccesses);
@@ -66,10 +68,10 @@ class SimOrdersView extends ConsumerWidget {
       
                     late Widget trailing;
       
-                    if (order.status == 0){ trailing = Icon(MdiIcons.bookmarkRemove, size: 30, color: Colors.red); }
-                    else if (order.status == 1) { trailing = Icon(MdiIcons.bookmarkPlus, size: 30, color: Colors.blue); }
-                    else if (order.status == 2) { trailing = Icon(MdiIcons.bookmarkMinus, size: 30, color: Colors.yellow); } 
-                    else { trailing = Icon(MdiIcons.bookmarkCheck, size: 30, color: Colors.green); }
+                    if (order.status == 0){ trailing = SizedBox(height: double.infinity, child: Icon(MdiIcons.bookmarkRemove, size: 30, color: Colors.red)); }
+                    else if (order.status == 1) { trailing = SizedBox(height: double.infinity, child: Icon(MdiIcons.bookmarkPlus, size: 30, color: Colors.blue)); }
+                    else if (order.status == 2) { trailing = SizedBox(height: double.infinity, child: Icon(MdiIcons.bookmarkMinus, size: 30, color: Colors.yellow)); } 
+                    else { trailing = SizedBox(height: double.infinity, child: Icon(MdiIcons.bookmarkCheck, size: 30, color: Colors.green)); }
                 
                     return Padding(
                       padding: const EdgeInsets.all(3.0),
@@ -111,7 +113,9 @@ class SimOrdersView extends ConsumerWidget {
       addOrder ? 
       FloatingActionButton.extended(
         elevation: 3,
-        onPressed: () {  },
+        onPressed: () { 
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => SimOrderAdd(uniqItems: uniqItems.value!,)));
+        },
         backgroundColor: Colors.amber,
         label: Text('создать', style: firm12,),
         icon: Icon(MdiIcons.fileDocumentPlus, color: firmColor, size: 25,),

@@ -19,6 +19,10 @@ String simDelOrders = 'sim_del_orders';
 // выдача заявок (СиМ)
 String simExOrders = 'sim_ex_orders';
 
+// прием заявок (СиМ)
+String simTakeOrders = 'sim_take_orders';
+
+
 
 
 

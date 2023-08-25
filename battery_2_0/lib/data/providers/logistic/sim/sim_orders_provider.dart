@@ -14,12 +14,13 @@ import '../../../user/user_impl.dart';
 
 final closeOrdersProvider = StateProvider((ref) => []);
 
+// WebSocketChannel запроса всех заявок
 final simOrdersChannelProvider = Provider((ref) {
   return WebSocketChannel.connect(Uri.parse('$mainRoute$simAllOrders'));
 });
 
 
-
+// WebSocketChannel запроса всех заявок
 final simOrdersProvider = StreamProvider.autoDispose<List>((ref) async* {
 
   final User user = User(userInfoData: UserImpl().savedUserInfo());
@@ -101,3 +102,49 @@ final simSelectedOrderProvider = StreamProvider.autoDispose.family<List, String>
   }
 
 });
+
+
+
+// WebSocketChannel запроса уникальных комплектующих для создания заявки
+final simUniqItemsChannelProvider = Provider((ref) {
+  return WebSocketChannel.connect(Uri.parse('$mainRoute$simUniqItems'));
+});
+
+
+// stream WebSocketChannel запроса уникальных комплектующих для создания заявки
+final simUniqItemsProvider = StreamProvider.autoDispose<List>((ref) async* {
+  final User user = User(userInfoData: UserImpl().savedUserInfo());
+  String device = DeviceImpl().getSavedDeviceId();
+  Map<String, dynamic> data = {'device': device, 'user_id': user.id};
+  try {ref.container.refresh(simUniqItemsChannelProvider);} catch (e){ null; }
+  var bStream = ref.watch(simUniqItemsChannelProvider).stream.asBroadcastStream(onCancel: (sub) => sub.cancel());
+
+  bool isSubControlError = false;
+
+  ref.watch(simUniqItemsChannelProvider).sink.add(jsonEncode(data));
+  final sub = bStream.listen(
+    (result){},
+    onError: (_, stack) => null,
+    onDone: () async {
+      isSubControlError = true;
+      await Future.delayed(const Duration(seconds: 10));
+      try {ref.container.refresh(simUniqItemsChannelProvider);} catch (e){ null; }
+    },
+  );
+
+  ref.onDispose(() {
+    sub.cancel();
+    if (isSubControlError == false){
+      ref.watch(simUniqItemsChannelProvider).sink.close(1000);
+      ref.container.refresh(simUniqItemsChannelProvider);
+    }
+  }); 
+
+  await for (final result in bStream) {
+    List items = jsonDecode(result);
+    List uniqItems = SimOrdersImpl().editDataUniqItems(items);
+    yield uniqItems;
+  }
+
+});
+

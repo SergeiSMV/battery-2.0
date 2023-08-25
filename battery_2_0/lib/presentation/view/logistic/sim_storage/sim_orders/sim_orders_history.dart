@@ -1,7 +1,9 @@
 
+import 'package:battery_2_0/presentation/view/logistic/sim_storage/sim_orders/sim_order_selected.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../../../../domain/models/departments/logistic/sim_orders/sim_orders.dart';
@@ -27,7 +29,8 @@ class SimOrdersHistory extends StatelessWidget {
         backgroundColor: Colors.green.shade100,
         title: Text('закрытые заявки СиМ', style: firm14,),
       ),
-      body: closedOrders.isEmpty ? Center(child: Text('нет истории', style: firm14,)) :
+      body: closedOrders.isEmpty ? 
+      Center(child: SizedBox(height: 200, width: 200, child: Lottie.asset('lib/images/lottie/not_found.json'))) :
       Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -38,7 +41,7 @@ class SimOrdersHistory extends StatelessWidget {
               groupBy: (element) => element['dateFormat'],
               groupComparator: (value1, value2) => value1.compareTo(value2),
               order: GroupedListOrder.DESC,
-              useStickyGroupSeparators: true,
+              // useStickyGroupSeparators: true,
               floatingHeader: true,
               groupSeparatorBuilder: (value) => Container(
                 color: Colors.transparent,
@@ -88,7 +91,7 @@ class SimOrdersHistory extends StatelessWidget {
                           ],
                         ),
                         onTap: (){
-                          // Navigator.of(context).push(MaterialPageRoute(builder: (context) => SelectedOrder(num: order.num,)));
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => SimOrderSelected(num: order.num,)));
                         },
                       ),
                     )

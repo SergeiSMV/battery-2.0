@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 TextStyle firm18 = TextStyle(color: firmColor, fontSize: 18);
 TextStyle firm16 = TextStyle(color: firmColor, fontSize: 16);
 TextStyle firm14 = TextStyle(color: firmColor, fontSize: 14);
+TextStyle firm13 = TextStyle(color: firmColor, fontSize: 13);
 TextStyle firm12 = TextStyle(color: firmColor, fontSize: 12);
 TextStyle firm10 = TextStyle(color: firmColor, fontSize: 10);
 
@@ -19,6 +20,7 @@ TextStyle white10 = const TextStyle(color: Colors.white, fontSize: 10);
 TextStyle grey18 = const TextStyle(color: Colors.grey, fontSize: 18);
 TextStyle grey16 = const TextStyle(color: Colors.grey, fontSize: 16);
 TextStyle grey14 = const TextStyle(color: Colors.grey, fontSize: 14);
+TextStyle grey13 = const TextStyle(color: Colors.grey, fontSize: 13);
 TextStyle grey12 = const TextStyle(color: Colors.grey, fontSize: 12);
 TextStyle grey10 = const TextStyle(color: Colors.grey, fontSize: 10);
 

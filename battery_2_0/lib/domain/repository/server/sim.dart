@@ -66,5 +66,11 @@ String simSaveComing = 'sim_save_coming';
 // Запрос всех заявок (СиМ)
 String simAllOrders = 'sim_all_orders';
 
-// rout запрос комплектующих по заявке (СиМ)
+// запрос комплектующих по заявке (СиМ)
 String simOrderItems = 'sim_order_items';
+
+// Запрос уникальных комплектующих для создания заявки (СиМ)
+String simUniqItems = 'sim_uniq_items';
+
+// отправка заявки (сохранение в БД)
+String simAddOrder = 'sim_add_order';
