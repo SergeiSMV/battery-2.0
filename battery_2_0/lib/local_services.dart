@@ -12,7 +12,7 @@ class LocalNotificationServices {
     );
     notificationsPlugin.initialize(
       initializationSettings,
-      // onDidReceiveNotificationResponse: ((details) { }),
+      // onDidReceiveNotificationResponse: ((details){}),
     );
     // ignore: avoid_print
     FirebaseMessaging.instance.getToken().then((String? token) { print(token); });
