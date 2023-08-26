@@ -25,6 +25,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
+
 android {
     namespace "com.example.battery_2_0"
     compileSdkVersion flutter.compileSdkVersion
@@ -68,6 +69,13 @@ flutter {
     source '../..'
 }
 
+
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    // добавлено по нотификации
+    implementation platform('com.google.firebase:firebase-bom:32.2.2')
 }
+
+// добавлено по нотификации
+apply plugin: 'com.google.gms.google-services'
+

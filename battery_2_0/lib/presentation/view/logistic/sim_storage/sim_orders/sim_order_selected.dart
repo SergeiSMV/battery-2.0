@@ -57,7 +57,6 @@ class SimOrderSelected extends ConsumerWidget {
                             itemBuilder: (context, index){
                               
                               SimOrderItems item = SimOrderItems(item: data[index]);
-                              print(data[index]);
                       
                               late Widget trailing;
                       

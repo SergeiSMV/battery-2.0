@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "145401506513",
+    "project_id": "razmobile-391d6",
+    "storage_bucket": "razmobile-391d6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:145401506513:android:ba6fb3d7cd9b1046c473f0",
+        "android_client_info": {
+          "package_name": "com.example.battery_2_0"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "145401506513-4ajafs65308fa507ijolnshvcvkdnm5p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFBVQTnTNBv4YWfs4u0ZBbP5zB21ys_tU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "145401506513-4ajafs65308fa507ijolnshvcvkdnm5p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

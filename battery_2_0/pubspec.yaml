@@ -58,6 +58,9 @@ dependencies:
   carousel_slider: ^4.2.1
   image_picker: ^1.0.2
   mobile_scanner: ^3.4.1
+  firebase_core: ^2.15.1
+  firebase_messaging: ^14.6.7
+  flutter_local_notifications: ^15.1.1
 
 dev_dependencies:
   flutter_test:
