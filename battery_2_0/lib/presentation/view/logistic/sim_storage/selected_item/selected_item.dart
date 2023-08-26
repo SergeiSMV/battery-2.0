@@ -17,8 +17,8 @@ import '../../../../widgets/logistic/sim_storage/selected_item/sim_item_image.da
 
 class SelectedItem extends ConsumerStatefulWidget {
   final String itemId;
-  final BuildContext simCatalogContext;
-  const SelectedItem({Key? key, required this.itemId, required this.simCatalogContext}) : super(key: key);
+  final BuildContext mainContext;
+  const SelectedItem({Key? key, required this.itemId, required this.mainContext}) : super(key: key);
 
   @override
   ConsumerState  <SelectedItem> createState() => _SelectedItem();
@@ -69,7 +69,7 @@ class _SelectedItem extends ConsumerState <SelectedItem> with SingleTickerProvid
             int totalQuantity = data['total_quantity'];
 
             List<Widget> itemMenu = SimItemsImpl().selectedItemFabMenu(
-              allUserAccesses!, widget.simCatalogContext, Map.from(data['selected_item']), refresh, allSimItems!
+              allUserAccesses!, widget.mainContext, Map.from(data['selected_item']), refresh, allSimItems!
             );
     
             return Scaffold(

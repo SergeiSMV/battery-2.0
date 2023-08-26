@@ -57,6 +57,7 @@ class SimOrderSelected extends ConsumerWidget {
                             itemBuilder: (context, index){
                               
                               SimOrderItems item = SimOrderItems(item: data[index]);
+                              print(data[index]);
                       
                               late Widget trailing;
                       
@@ -90,9 +91,28 @@ class SimOrderSelected extends ConsumerWidget {
                                           item.comment.isEmpty ? const SizedBox.shrink() : Text('комментарий:  ${item.comment}', style: firm10),
                                         ],
                                       ),
-                                      onTap: () { 
-                                        if (item.status == 1){ !exOrderAccess ? null : messenger._toast('нет доступа на выдачу комплектующих по заявкам');}
-                                        else if (item.status == 2){ takeOrderAccess ? null : messenger._toast('нет доступа на приемку комплектующих по заявкам');}
+                                      onTap: () async { 
+                                        if (item.status == 1){ !exOrderAccess ? messenger._toast('нет доступа на выдачу комплектующих по заявкам') : {
+                                          ProgressHUD.of(context)?.show(),
+                                          await SimOrdersImpl().getBaseItemQuantity(item.id).then((baseQuantity) async {
+                                            baseQuantity is int ? {
+                                              data[index]['baseItemQuantity'] = baseQuantity,
+                                              await SimOrdersImpl().simExOrderItem(context, data[index]).then((exValue) {
+                                                ProgressHUD.of(context)?.dismiss();
+                                                exValue == 'done' ? messenger._toast('успешно') : messenger._toast(exValue);
+                                              })
+                                            } : {messenger._toast(baseQuantity), ProgressHUD.of(context)?.dismiss()};
+                                          })
+                                        };}
+                                        else if (item.status == 2){ !takeOrderAccess ? messenger._toast('нет доступа на приемку комплектующих по заявкам') : {
+                                          ProgressHUD.of(context)?.show(),
+                                          await SimOrdersImpl().simExOrderItemAccept(context, data[index]).then((exAcceptValue) {
+                                            ProgressHUD.of(context)?.dismiss();
+                                            exAcceptValue == 'done' ? messenger._toast('успешно') : messenger._toast(exAcceptValue);
+                                          })
+                                        };}
+
+
                                         else { messenger._toast('позиция выдана и закрыта для редактирования'); }
                                       }
                                     ),

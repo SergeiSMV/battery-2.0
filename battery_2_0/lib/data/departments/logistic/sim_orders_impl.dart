@@ -1,6 +1,7 @@
 
 
 
+import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 
@@ -8,6 +9,10 @@ import '../../../domain/models/accesses/accesses.dart';
 import '../../../domain/repository/departments/accesses_names.dart';
 import '../../../domain/repository/departments/logistic/sim_orders_repo.dart';
 import '../../../domain/repository/server/sim.dart';
+import '../../../presentation/view/logistic/sim_storage/sim_orders/sim_orders_alert.dart';
+import '../../../presentation/widgets/logistic/sim_storage/coming/barcode_scanner.dart';
+import '../../../presentation/widgets/logistic/sim_storage/orders/sim_ex_item_accept_dialog.dart';
+import '../../../presentation/widgets/logistic/sim_storage/orders/sim_ex_item_dialog.dart';
 import '../../server/connect_impl.dart';
 
 class SimOrdersImpl extends SimOrdersRepository{
@@ -153,6 +158,59 @@ class SimOrdersImpl extends SimOrdersRepository{
     return takeOrderAccess;
   }
 
+
+  // запрос фактического остатка ТМЦ в базе
+  @override
+  Future getBaseItemQuantity(int itemId) async {
+    dynamic requestResult;
+    await ConnectionImpl().request(simBaseItemQuantity, {'itemId': itemId}).then((value) async {
+      requestResult = value;
+    });
+    return requestResult;
+  }
+
+  
+  // выдача комплектующих
+  @override
+  Future simExOrderItem(BuildContext context, Map item) async {
+    dynamic requestResult = 'отмена операции';
+    Map extraditionData = {};
+    String itemId = item['item_id'].toString();
+    await barcodeScanner(context).then((scannResult){
+      scannResult == itemId ? simExItemDialog(context, item).then((factQuantity) async {
+          factQuantity == null ? null : {
+            extraditionData = {'order_id': item['order_id'], 'factQuantity': factQuantity, 'num': item['num']},
+            await ConnectionImpl().request(simItemExtradition, extraditionData).then((value) async {
+              requestResult = value;
+            })
+          };
+        }) 
+      : 
+      {
+        simOrdersAlert(context, 'не верный паллет', 'lib/images/lottie/close.json'),
+      };
+    });
+    return requestResult;
+  }
+
+
+  // приемка комплектующих
+  @override
+  Future simExOrderItemAccept(BuildContext context, Map item) async {
+    dynamic requestResult = 'отмена операции';
+    final userInfo = GetStorage().read('info');
+    String author = '${userInfo['surname']} ${userInfo['name'][0]}.${userInfo['patronymic'][0]}.';
+    Map acceptData = {};
+    await simExItemAcceptDialog(context, item).then((answer) async {
+      answer == 'no' ? null : {
+        acceptData = {'data': item, 'author': author},
+        await ConnectionImpl().request(simAcceptExtradition, acceptData).then((value) async {
+          requestResult = value;
+        })
+      };
+    });
+    return requestResult;
+  }
 
 
 }

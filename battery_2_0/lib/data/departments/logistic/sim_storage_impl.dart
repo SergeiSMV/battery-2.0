@@ -1,10 +1,15 @@
 
 import 'package:battery_2_0/domain/models/accesses/accesses.dart';
+import 'package:battery_2_0/presentation/widgets/logistic/sim_storage/coming/barcode_scanner.dart';
+import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 
 import '../../../domain/repository/departments/accesses_names.dart';
 import '../../../domain/repository/departments/logistic/sim_storage_repo.dart';
+import '../../../domain/repository/server/sim.dart';
+import '../../../presentation/view/logistic/sim_storage/selected_item/selected_item.dart';
+import '../../server/connect_impl.dart';
 
 class SimStorageImpl extends SimStorageRepository{
   
@@ -37,5 +42,36 @@ class SimStorageImpl extends SimStorageRepository{
     }
 
     return sim;
+  }
+
+
+  // идетификация ТМЦ
+  @override
+  Widget simItemsIdentify(BuildContext context) {
+    final messenger = ScaffoldMessenger.of(context);
+    return barcodeScanner(context).then((itemId) async {
+      itemId == null ? messenger._toast('ничего не найдено') : {
+        await ConnectionImpl().request(simItemDelPhoto, {'item_id': itemId}).then((value) async {
+          value == 0 ? messenger._toast('ничего не найдено') :
+          Navigator.push(context, MaterialPageRoute(builder: (context) => SelectedItem(itemId: itemId, mainContext: context,)));
+        })
+      };
+    });
+  }
+
+
+
+
+}
+
+
+extension on ScaffoldMessengerState {
+  void _toast(String message){
+    showSnackBar(
+      SnackBar(
+        content: Text(message), 
+        duration: const Duration(seconds: 4),
+      )
+    );
   }
 }

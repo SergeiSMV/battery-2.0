@@ -1,5 +1,7 @@
 
 
+import 'package:flutter/material.dart';
+
 import '../../../models/accesses/accesses.dart';
 
 abstract class SimOrdersRepository{
@@ -33,6 +35,15 @@ abstract class SimOrdersRepository{
 
   // приемка комплектующих (проверка доступа)
   bool simTakeOrdersAccess(Accesses? allAccesses);
+
+  // запрос фактического остатка ТМЦ в базе
+  Future getBaseItemQuantity(int itemId);
+
+  // выдача комплектующих
+  Future simExOrderItem(BuildContext context, Map item);
+
+  // приемка комплектующих
+  Future simExOrderItemAccept(BuildContext context, Map item);
 
 
 }

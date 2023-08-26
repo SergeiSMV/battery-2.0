@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../data/departments/logistic/sim_storage_impl.dart';
 import '../../data/user/device_impl.dart';
 import '../view/logistic/logistic.dart';
 import '../view/logistic/sim_storage/selected_item/selected_item.dart';
@@ -69,14 +70,14 @@ final router = GoRouter(
                   name: 'selected_item',
                   builder: ((context, state) => SelectedItem(
                     itemId: '${state.pathParameters['itemId']}',
-                    simCatalogContext: state.extra as BuildContext
+                    mainContext: state.extra as BuildContext
                   )),
                 ),
               ]
             ),
             GoRoute(
               path: 'identification',
-              builder: ((context, state) => const Home()),
+              builder: ((context, state) => SimStorageImpl().simItemsIdentify(context)),
             ),
           ]
         ),

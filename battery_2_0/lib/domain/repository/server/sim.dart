@@ -59,6 +59,10 @@ String simCheckBarcode = 'sim_check_barcode';
 // проведение (сохранение) поступления
 String simSaveComing = 'sim_save_coming';
 
+// проверка существования id в базе items для идентификации
+String checkItemIdExist = 'check_item_id_exist';
+
+
 
 
 
@@ -74,3 +78,13 @@ String simUniqItems = 'sim_uniq_items';
 
 // отправка заявки (сохранение в БД)
 String simAddOrder = 'sim_add_order';
+
+// запрос фактического остатка в базе ТМЦ по id (СиМ)
+String simBaseItemQuantity = 'sim_base_item_quantity';
+
+// выдача ТМЦ по заявке (СиМ)
+String simItemExtradition = 'sim_item_extradition';
+
+// приемка ТМЦ по заявке (СиМ)
+String simAcceptExtradition = 'sim_accept_extradition';
+

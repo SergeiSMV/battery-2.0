@@ -34,7 +34,7 @@ barcodeScanner(BuildContext mainContext){
                     children: [
                       MobileScanner(
                         controller: MobileScannerController(
-                          detectionSpeed: DetectionSpeed.noDuplicates
+                          detectionSpeed: DetectionSpeed.normal
                         ),
                         onDetect: (capture) async {
                           final List<Barcode> barcodes = capture.barcodes;

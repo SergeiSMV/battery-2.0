@@ -14,6 +14,7 @@ class SimOrderItems with _$SimOrderItems {
   factory SimOrderItems.fromJson(Map<String, dynamic> json) => _$SimOrderItemsFromJson(json);
 
   String get name => '${item['category']} ${item['name']} ${item['color']}';
+  int get id => item['item_id'];
   String get producer => item['producer'];
   String get place => item['place'];
   String get cell => item['cell'];

@@ -1,3 +1,4 @@
+import 'package:battery_2_0/presentation/view/logistic/sim_storage/selected_item/selected_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -5,9 +6,12 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../data/departments/logistic/sim_storage_impl.dart';
 import '../../../../data/providers/user/user_accesses_provider.dart';
+import '../../../../data/server/connect_impl.dart';
 import '../../../../domain/models/departments/logistic/sim_storage_main/sim_storage_main.dart';
+import '../../../../domain/repository/server/sim.dart';
 import '../../../widgets/app_colors.dart';
 import '../../../widgets/app_text_styles.dart';
+import '../../../widgets/logistic/sim_storage/coming/barcode_scanner.dart';
 
 class SimStorage extends ConsumerWidget {
   const SimStorage({super.key});
@@ -17,6 +21,7 @@ class SimStorage extends ConsumerWidget {
 
     final allUserAccesses = ref.watch(allAccessesProvider).value;
     List simStorageMain = SimStorageImpl().simStorageMain(allUserAccesses!, 'склад сырья и материалов');
+    final messenger = ScaffoldMessenger.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -84,7 +89,20 @@ class SimStorage extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    onTap: (){ context.push(element.route); },
+                    onTap: () async {
+                      // идентификация
+                      element.description == 'идентификация' ? {
+                        barcodeScanner(context).then((itemId) async {
+                          itemId == null ? messenger._toast('ничего не найдено') : {
+                            await ConnectionImpl().request(checkItemIdExist, {'item_id': itemId}).then((value) async {
+                              value == 0 ? messenger._toast('ничего не найдено') :
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => SelectedItem(itemId: itemId, mainContext: context,)));
+                            })
+                          };
+                        })
+                      } 
+                      : context.push(element.route);
+                    },
                   );
                 }
               ),
@@ -94,6 +112,19 @@ class SimStorage extends ConsumerWidget {
         ),
         ]
       ),
+    );
+  }
+}
+
+
+
+extension on ScaffoldMessengerState {
+  void _toast(String message){
+    showSnackBar(
+      SnackBar(
+        content: Text(message), 
+        duration: const Duration(seconds: 4),
+      )
     );
   }
 }
