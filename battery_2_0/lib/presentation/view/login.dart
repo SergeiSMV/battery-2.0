@@ -3,7 +3,6 @@ import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../data/user/login_impl.dart';
-import '../widgets/app_colors.dart';
 import '../widgets/app_text_styles.dart';
 
 class Login extends StatefulWidget {
@@ -88,22 +87,22 @@ class _LoginState extends State<Login> {
                       ),
       
                       const SizedBox(height: 15,),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 30, right: 30),
-                        child: CheckboxListTile(
-                          activeColor: firmColor,
-                          title: Text('сохранить данные для входа', style: firm12,),
-                          subtitle: Text('* автоматический вход при следующем посещении', style: grey10),
-                          value: saveDevice, 
-                          onChanged: (value){
-                            if (mounted){
-                              setState(() {
-                                saveDevice = value!;
-                              });
-                            }
-                          }
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(left: 30, right: 30),
+                      //   child: CheckboxListTile(
+                      //     activeColor: firmColor,
+                      //     title: Text('сохранить данные для входа', style: firm12,),
+                      //     subtitle: Text('* автоматический вход при следующем посещении', style: grey10),
+                      //     value: saveDevice, 
+                      //     onChanged: (value){
+                      //       if (mounted){
+                      //         setState(() {
+                      //           saveDevice = value!;
+                      //         });
+                      //       }
+                      //     }
+                      //   ),
+                      // ),
                       const SizedBox(height: 20),
                       identifier.text.isEmpty || password.text.isEmpty ? const SizedBox.shrink() :
                       Padding(
@@ -121,11 +120,9 @@ class _LoginState extends State<Login> {
                             final progress = ProgressHUD.of(context);
                             progress?.showWithText('проверка...');
                             final messenger = ScaffoldMessenger.of(context);
-                            String result = await LoginImpl(userData: {'login': identifier.text, 'password': password.text}, autoLogin: saveDevice,).login();
-                            progress?.dismiss();
-                            // ignore: use_build_context_synchronously
-                            result == 'доступ разрешен' ? context.pushReplacement('/home') : 
-                            messenger.toast(result);
+                            await LoginImpl(userData: {'login': identifier.text, 'password': password.text}, autoLogin: saveDevice,).login().then((value){
+                              value == 'доступ разрешен' ? context.pushReplacement('/home') : messenger.toast(value);
+                            });
                           }, 
                         ),
                       ),

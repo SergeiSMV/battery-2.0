@@ -22,11 +22,11 @@ class LoginImpl extends LoginRepository{
     if (checkLoginDataResult == 0){ return 'не правильный логин или пароль'; }
     
     else if (checkLoginDataResult == 1){
-      autoLogin ? await DeviceImpl().saveCurrentDeviceId() : null;
+      // autoLogin ? await DeviceImpl().saveCurrentDeviceId() : null;
+      await DeviceImpl().saveCurrentDeviceId();
       var result = await user.saveUserInfo(userData);
-      var accessIndexingResult = await user.accessIndexing();
-      if (result == 'done' && accessIndexingResult == 'done'){ return 'доступ разрешен'; }
-      else { return 'ошибка запроса данных о пользователе'; }
+      await user.saveUserInfo(userData);
+      return result == 'done' ? 'доступ разрешен' : 'ошибка запроса данных о пользователе';
     }
     
     else  { return checkLoginDataResult.toString(); }

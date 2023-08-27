@@ -15,7 +15,7 @@ class LocalNotificationServices {
       // onDidReceiveNotificationResponse: ((details){}),
     );
     // ignore: avoid_print
-    FirebaseMessaging.instance.getToken().then((String? token) { print(token); });
+    // FirebaseMessaging.instance.getToken().then((String? token) { print(token); });
   }
 
 

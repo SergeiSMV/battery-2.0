@@ -21,6 +21,10 @@ String accessesUserRoute = 'accesses_user';
 // rout сохранения доступов NEW
 String accessesUpdateRoute = 'accesses_update';
 
+// выход из аккаунта
+String exitAccountRoute = 'exit_account';
+
+
 
 
 

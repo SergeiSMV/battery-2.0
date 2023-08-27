@@ -19,4 +19,6 @@ abstract class UserRepository {
 
   List otherChaptersAccess(Accesses allAccesses);
 
+  Future exitAccount();
+
 }

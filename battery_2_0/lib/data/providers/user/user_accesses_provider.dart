@@ -50,6 +50,7 @@ final allAccessesProvider = StreamProvider.autoDispose<Accesses>((ref) async* {
   await for (final result in bStream) {
     Accesses accesses = Accesses(accessesList: jsonDecode(result));
     List chapters = UserImpl().otherChaptersAccess(accesses);
+    UserImpl().accessIndexing();
     ref.read(otherChaptersAccess.notifier).state = chapters;
     yield accesses;
   }

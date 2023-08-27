@@ -15,7 +15,7 @@ class DeviceImpl extends DeviceRepositry{
     var deviceInfo = DeviceInfoPlugin();
       try {
         var androidDeviceInfo = await deviceInfo.androidInfo;
-        deviceId = androidDeviceInfo.id.toString();
+        deviceId = androidDeviceInfo.data['display'].toString();
         return deviceId;
       } on PlatformException {
         deviceId = 'Failed to get deviceId';

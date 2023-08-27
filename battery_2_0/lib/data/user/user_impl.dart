@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:battery_2_0/domain/models/accesses/accesses.dart';
 import 'package:battery_2_0/domain/repository/user/user_repo.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -9,6 +10,8 @@ import '../../domain/models/departments/departments.dart';
 import '../../domain/models/user/user.dart';
 import '../../domain/repository/server/server_data.dart';
 import '../../domain/repository/server/users.dart';
+import '../server/connect_impl.dart';
+import 'device_impl.dart';
 
 class UserImpl extends UserRepository{
 
@@ -63,8 +66,10 @@ class UserImpl extends UserRepository{
   
   @override
   Future<String> accessIndexing() async {
+    String? userToken = await FirebaseMessaging.instance.getToken();
+    String device = DeviceImpl().getSavedDeviceId();
     final User user = User(userInfoData: savedUserInfo());
-    Map<String, dynamic> data = {'user_id': user.id};
+    Map<String, dynamic> data = {'user_id': user.id, 'device': device, 'token': userToken};
     bool isConnected = true;
     WebSocketChannel channel = WebSocketChannel.connect(Uri.parse('$mainRoute$accessesIndexingRoute'));
     await channel.ready.onError((error, stackTrace) => isConnected = false);
@@ -116,6 +121,19 @@ class UserImpl extends UserRepository{
     return chapters;
 
   }
+
+  @override
+  Future exitAccount() async {
+    dynamic requestResult;
+    String device = DeviceImpl().getSavedDeviceId();
+    final User user = User(userInfoData: savedUserInfo());
+    Map<String, dynamic> data = {'user_id': user.id, 'device': device};
+    await ConnectionImpl().request(exitAccountRoute, data).then((value) async {
+      requestResult = value;
+    });
+    return requestResult;
+  }
+
 
 
 
