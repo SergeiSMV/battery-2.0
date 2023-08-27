@@ -12,9 +12,6 @@ abstract class SimStorageRepository{
   // КНОПКА настройки склада (проверка доступа)
   bool storageSettingButton(Accesses? allAccesses);
 
-  // роутер настроек склада
-  void settingRouter(BuildContext context, String route);
-
   // идентификация ТМЦ
   Widget simItemsIdentify(BuildContext context);
 

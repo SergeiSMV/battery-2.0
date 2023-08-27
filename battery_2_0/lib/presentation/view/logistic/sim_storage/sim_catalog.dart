@@ -16,6 +16,7 @@ import '../../../../data/providers/user/user_accesses_provider.dart';
 import '../../../../domain/models/departments/logistic/sim_menu_values.dart';
 import '../../../../domain/models/departments/logistic/sim_items/sim_items.dart';
 import '../../../widgets/app_colors.dart';
+import 'sim_settings/sim_setting_nm.dart';
 
 class SimCatalog extends ConsumerStatefulWidget {
   const SimCatalog({super.key});
@@ -69,25 +70,17 @@ class _SimCatalogState extends ConsumerState<SimCatalog> {
               backgroundColor: Colors.green.shade100,
               title: Text('склад СиМ', style: firm14,),
               actions: [
+
                 // настройки
                 settingAccess ?
-                PopupMenuButton(
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(20.0),
-                    ),
-                  ),
-                  icon: Icon(MdiIcons.cog, size: 25, color: firmColor),
-                  onSelected: (value){ SimStorageImpl().settingRouter(context, value); },
-                  itemBuilder: (BuildContext context) { 
-                    return Setings.choices.map((String choice) {
-                      return PopupMenuItem<String>(
-                        value: choice,
-                        child: Text(choice, style: firm12,),
-                      );
-                    }).toList();
-                  },
-                ) : const SizedBox.shrink(),
+
+                IconButton(
+                  onPressed: (){ 
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const SimSettingNomenclature()));
+                  }, 
+                  icon: Icon(MdiIcons.alphaNBox, size: 25, color: firmColor),
+                )
+                : const SizedBox.shrink(),
                 
                 // поиск
                 IconButton(
@@ -200,7 +193,6 @@ class _SimCatalogState extends ConsumerState<SimCatalog> {
                             ),
                           ),
                         ),
-            
             
                         // контейнер выбора ТМЦ на печать
                         AnimatedContainer(

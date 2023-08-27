@@ -14,8 +14,13 @@ String simSelectedItem = 'sim_selected_item';
 // Удаление выбранной позиции
 String simDeleteItem = 'sim_delete_item';
 
+// Получение списка номенклатуры ВСЕЙ
+String simGetNomenclature = 'sim_get_nomenclature';
+
 // Получение списка категорий
 String simGetCategories = 'sim_get_categories';
+
+
 
 // Получение списка наименований по категории
 String simGetNames = 'sim_get_names';
@@ -27,7 +32,13 @@ String simGetColors = 'sim_get_colors';
 String simGetProducers = 'sim_get_producers';
 
 // Получение списка поставщиков ВСЕХ
-String simGetAllProducers = 'sim_get_all_producers';
+String simAllProducers = 'sim_all_producers';
+
+// Получение списка ед. измерения ВСЕХ
+String simAllUnits = 'sim_all_units';
+
+// Добавление номенклатуры
+String simAddNomenclature = 'sim_add_nomenclature';
 
 // Получение списка ед. измерения по категории, наименованию и поставщику
 String simGetUnits = 'sim_get_units';

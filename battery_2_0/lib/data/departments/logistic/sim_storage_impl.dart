@@ -57,13 +57,6 @@ class SimStorageImpl extends SimStorageRepository{
   }
 
 
-  // роутер настроек склада
-  @override
-  void settingRouter(BuildContext context, String route) {
-    null;
-  }
-
-
   // идетификация ТМЦ
   @override
   Widget simItemsIdentify(BuildContext context) {

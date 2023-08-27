@@ -116,16 +116,6 @@ class SimItemsImpl extends SimItemsRepository{
     return requestResult;
   }
   
-  // Получение списка номенклатуры
-  @override
-  Future<List> getNomenclature() async {
-    List nomenclature = [];
-    await ConnectionImpl().request(simGetCategories, {}).then((value) async {
-      value is List ? nomenclature = value : null;
-    });
-    return nomenclature;
-  }
-  
   // Получение списка категорий
   @override
   Future getCategories(BuildContext context, TextEditingController categoryCntr) async {
