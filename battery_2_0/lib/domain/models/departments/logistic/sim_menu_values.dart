@@ -37,3 +37,17 @@ class PrintQrItems {
 }
 
 
+
+class Setings {
+  static const String nomenclature = 'номенклатура';
+  static const String producers = 'поставщики';
+  static const String colors = 'цвета';
+
+  static const List<String> choices = <String>[
+    nomenclature,
+    producers,
+    colors,
+  ];
+}
+
+

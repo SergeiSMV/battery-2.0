@@ -26,6 +26,9 @@ String simGetColors = 'sim_get_colors';
 // Получение списка поставщиков по категории и наименованию
 String simGetProducers = 'sim_get_producers';
 
+// Получение списка поставщиков ВСЕХ
+String simGetAllProducers = 'sim_get_all_producers';
+
 // Получение списка ед. измерения по категории, наименованию и поставщику
 String simGetUnits = 'sim_get_units';
 

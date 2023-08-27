@@ -9,8 +9,10 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 import '../../../../data/bloc/logistic/sim_items_bloc.dart';
 import '../../../../data/departments/logistic/sim_items_impl.dart';
+import '../../../../data/departments/logistic/sim_storage_impl.dart';
 import '../../../../data/providers/logistic/sim/items_print_provider.dart';
 import '../../../../data/providers/logistic/sim/sim_items_provider.dart';
+import '../../../../data/providers/user/user_accesses_provider.dart';
 import '../../../../domain/models/departments/logistic/sim_menu_values.dart';
 import '../../../../domain/models/departments/logistic/sim_items/sim_items.dart';
 import '../../../widgets/app_colors.dart';
@@ -44,6 +46,8 @@ class _SimCatalogState extends ConsumerState<SimCatalog> {
 
     final allSimItems = ref.watch(simItemsProvider);
     final selectedItems = ref.watch(itemsPrintProvider);
+    final allUserAccesses = ref.watch(allAccessesProvider).value;
+    bool settingAccess = SimStorageImpl().storageSettingButton(allUserAccesses!);
     
     return BlocProvider<SimItemsBloc>(
       create: (context) => SimItemsBloc(),
@@ -63,8 +67,27 @@ class _SimCatalogState extends ConsumerState<SimCatalog> {
               ),
               iconTheme: IconThemeData(color: firmColor),
               backgroundColor: Colors.green.shade100,
-              title: Text('ТМЦ склада СиМ', style: firm14,),
+              title: Text('склад СиМ', style: firm14,),
               actions: [
+                // настройки
+                settingAccess ?
+                PopupMenuButton(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20.0),
+                    ),
+                  ),
+                  icon: Icon(MdiIcons.cog, size: 25, color: firmColor),
+                  onSelected: (value){ SimStorageImpl().settingRouter(context, value); },
+                  itemBuilder: (BuildContext context) { 
+                    return Setings.choices.map((String choice) {
+                      return PopupMenuItem<String>(
+                        value: choice,
+                        child: Text(choice, style: firm12,),
+                      );
+                    }).toList();
+                  },
+                ) : const SizedBox.shrink(),
                 
                 // поиск
                 IconButton(

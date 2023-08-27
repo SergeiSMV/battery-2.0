@@ -45,6 +45,25 @@ class SimStorageImpl extends SimStorageRepository{
   }
 
 
+  // КНОПКА настройки склада (проверка доступа)
+  @override
+  bool storageSettingButton(Accesses? allAccesses) {
+    bool settingAccess = false;
+    const String dependence = 'склад сырья и материалов';
+    for (var dp in allAccesses!.accessesList) {
+      dp['depence'] == dependence && dp['chapter'] == simSetting ? settingAccess = true : null;
+    }
+    return settingAccess;
+  }
+
+
+  // роутер настроек склада
+  @override
+  void settingRouter(BuildContext context, String route) {
+    null;
+  }
+
+
   // идетификация ТМЦ
   @override
   Widget simItemsIdentify(BuildContext context) {

@@ -35,7 +35,6 @@ class SimItemsImpl extends SimItemsRepository{
     return fullNameItems;
   }
 
-
   // фильтр сырья и комплектующих
   @override
   void filterItems(BuildContext context, List items, String filter) {
@@ -52,7 +51,6 @@ class SimItemsImpl extends SimItemsRepository{
     
     context.read<SimItemsBloc>().add(UpdateSimItemsEvent(data: items.toList()));
   }
-
 
   // формирование и отправка данных для создания qr кодов
   @override
@@ -118,6 +116,16 @@ class SimItemsImpl extends SimItemsRepository{
     return requestResult;
   }
   
+  // Получение списка номенклатуры
+  @override
+  Future<List> getNomenclature() async {
+    List nomenclature = [];
+    await ConnectionImpl().request(simGetCategories, {}).then((value) async {
+      value is List ? nomenclature = value : null;
+    });
+    return nomenclature;
+  }
+  
   // Получение списка категорий
   @override
   Future getCategories(BuildContext context, TextEditingController categoryCntr) async {
@@ -164,6 +172,18 @@ class SimItemsImpl extends SimItemsRepository{
     });
     return requestResult;
   }
+
+
+  // Получение списка поставщиков ВСЕХ
+  @override
+  Future<List> getAllProducers() async {
+    List producers = [];
+    await ConnectionImpl().request(simGetProducers, {}).then((value) async {
+      value is List ? producers = value : null;
+    });
+    return producers;
+  }
+
   
   // Получение списка поставщиков по категории и наименованию
   @override

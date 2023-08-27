@@ -58,6 +58,10 @@ String simDelete = 'sim_delete';
 // ручное размещение поступления (СиМ)
 String simComingManual = 'sim_coming_manual';
 
+// настройки склада (СиМ)
+String simSetting = 'sim_setting';
+
+
 
 // Склад готовой продукции
 String gpStorage = 'gp_storage';

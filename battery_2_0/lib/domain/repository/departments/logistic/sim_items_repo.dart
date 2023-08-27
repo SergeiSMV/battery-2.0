@@ -25,6 +25,9 @@ abstract class SimItemsRepository{
 
   // удаление позиции
   Future<String> deleteItem(Map itemData);
+
+  // Получение списка номенклатуры
+  Future<List> getNomenclature();
   
   // Получение списка категорий
   Future getCategories(BuildContext context, TextEditingController categoryCntr);
@@ -34,6 +37,9 @@ abstract class SimItemsRepository{
   
   // Получение списка цветов
   Future getColors(BuildContext context, TextEditingController colorCntr);
+
+  // Получение списка поставщиков ВСЕХ
+  Future<List> getAllProducers();
 
   // Получение списка поставщиков по категории и наименованию
   Future getProducers(BuildContext context, TextEditingController producerCntr, Map itemData);
