@@ -8,7 +8,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'local_services.dart';
 import 'presentation/widgets/app.dart';
 
-// TEST COMMIT
+
 void main() async {
   await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
